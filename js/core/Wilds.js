@@ -1,0 +1,25 @@
+define(['core/Square'], function(Square){
+	return class Wilds extends Square{
+			constructor(x, y, maxWidth, maxHeight, growthRate){
+				super(x, y, maxWidth, maxHeight);
+				this.dangerValue = 1;
+				this.growthRate = growthRate;
+				this.type = "wilds"
+			}
+
+
+			getDanger(){
+				return this.dangerValue;
+			}
+
+			setDanger(value){
+				this.dangerValue = value;
+			}
+
+			takeTurn(){
+				
+				this.render();
+			}
+
+		}
+})

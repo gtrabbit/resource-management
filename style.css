@@ -1,0 +1,18 @@
+.square {
+height: 5px;
+width: 5px;
+border: solid black 1px;
+display: inline-block;
+background: black;
+opacity: 0;
+color: red;
+line-height: 5px;
+overflow: hidden;
+float: left;
+}
+
+.map {
+padding: 5px;
+border: solid black 5px;
+
+}
