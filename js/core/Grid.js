@@ -1,4 +1,5 @@
-define(['core/Wilds', 'home/Home', 'core/Civic'], function(Wilds, Home, Civic){
+define(['core/Wilds', 'home/Home', 'core/Civic', 'core/Terrain'],
+	function(Wilds, Home, Civic, Terrain){
 	return class Grid{
 		constructor(height, width, growthRate, homeStart){
 			this.height = height;
@@ -10,10 +11,16 @@ define(['core/Wilds', 'home/Home', 'core/Civic'], function(Wilds, Home, Civic){
 		}
 
 		makeHome(homeStart, homeEnd){
-			let home = new Home(homeStart, homeEnd, {'food': 5});
+			let home = new Home(this, homeStart, homeEnd, {'food': 5});
 			for (let x = homeStart[0]; x <= homeEnd[0]; x++){
 				for (let y = homeStart[1]; y <= homeEnd[1]; y++){
-					let starter = new Civic(x, y, this.width, this.height);
+					let starter = new Civic(
+						x,
+					 	y,
+					 	this.width,
+					 	this.height,
+					 	this.rows[x][y].terrain);
+					
 					home.territory.push(starter);
 					this.convertTile([x,y], starter)
 				}
@@ -24,10 +31,6 @@ define(['core/Wilds', 'home/Home', 'core/Civic'], function(Wilds, Home, Civic){
 
 		convertTile(coords, tile){
 			this.rows[coords[0]].splice(coords[1], 1, tile);
-		}
-
-		getContainer(){
-			return this.container;
 		}
 
 		update(){
@@ -72,10 +75,11 @@ define(['core/Wilds', 'home/Home', 'core/Civic'], function(Wilds, Home, Civic){
 				let col = [];
 				this.rows.push(col)
 				for (let y = 0; y < this.height; y++){
-					let square = new Wilds(x, y, this.height, this.width, this.growthRate);
+					let square = new Wilds(x, y, this.height, this.width, 'field', this.growthRate);
 					col.push(square);
 				}	
 			}
+			Terrain.generateTerrain(this.rows)
 		} //ends build
 	}
 })
