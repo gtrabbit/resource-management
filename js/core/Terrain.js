@@ -15,7 +15,6 @@ define({
 			grid.forEach((a,j)=>{
 				a.forEach((b,k)=>{
 					let neighbors = b.getNeighbors();
-
 					let environs = {
 						forest: 0,
 						hills: 0,
@@ -26,6 +25,8 @@ define({
 					})
 					if (environs.hills > 3){
 						b.terrain = 'hills';
+					} else if (x > 2 && b.terrain === 'hills' && environs.forest > 2){
+						b.terrain = 'forest';
 					} else if (environs.forest > 5){
 						b.terrain = 'forest';
 					} else if (x > 2 && environs.field > 4 || x > 4){
@@ -35,11 +36,15 @@ define({
 			})
 		}
 
-
+		this.checkMap(grid, size)
 		
 	},
 
-	checkMap(grid){
+
+//TODO: complete this function, telling map to re-generate
+//		if we don't have enough of each tile type... which
+//   	should be a % of total land area.
+	checkMap(grid, size){
 		let environs = {
 						forest: 0,
 						hills: 0,
@@ -51,12 +56,28 @@ define({
 			})
 		})
 
+		if (environs.forest < size/7 || environs.hills < size/9){
+			this.resetAll(grid);
+			this.generateTerrain(grid);
+		}
+
 
 	},
 
-	tryRandom(grid, size){
-
+	resetAll(grid){
+		console.log('infinite loop?')
+		grid.forEach(a=>{
+			a.forEach(b=>{
+				this.resetTile(b);
+			})
+		})
 	},
+
+
+	resetTile(tile){
+		tile.terrain = 'field'
+	},
+
 
 	firstIteration(grid, size){
 		

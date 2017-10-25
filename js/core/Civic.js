@@ -1,7 +1,7 @@
 define(['core/Square'], function(Square){
 	return class Civic extends Square {
-		constructor(x, y, maxWidth, maxHeight, terrain){
-			super(x, y, maxWidth, maxHeight, terrain);
+		constructor(x, y, grid, terrain){
+			super(x, y, grid, terrain);
 			this.usage = 'field';
 			this.type = 'civic';
 			this.currentThreat = 0;
@@ -10,6 +10,15 @@ define(['core/Square'], function(Square){
 
 		build(structure){
 			this.usage = structure;
+		}
+
+		render(){
+			this.ui.alpha = 1;
+
+		}
+
+		setListener(){
+			
 		}
 	}
 

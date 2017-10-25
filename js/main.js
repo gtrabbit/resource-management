@@ -6,20 +6,27 @@ requirejs.config({
 requirejs(['core/Game', 'core/Grid', 'libs/pixi.min'],
 
 	function(Game, Grid){
-		const renderer = PIXI.autoDetectRenderer(256, 256);
+		const renderer = PIXI.autoDetectRenderer(window.innerWidth-20, window.innerHeight-20);
 		document.body.appendChild(renderer.view);
 		const stage = new PIXI.Container();
+		document.getElementById('grow').addEventListener('click', function(){
+			thisGame.update();
+			//renderer.render(stage)
+		})
+		document.getElementById('log').addEventListener('click', function(){
+			console.log(thisGame)
+		})
 
 
 
 
-		let thisGame = new Game(5, 25, 25, stage)
-		thisGame.grid = new Grid(thisGame.height, thisGame.width, thisGame.growthRate, [3, 3]);
+		let thisGame = new Game(5, 35, 35, stage, renderer)
+		thisGame.grid = new Grid(thisGame, [3, 3]);
 		
-		thisGame.render();
+		thisGame.setStage();
+		thisGame.update();
 
-		console.log(thisGame)
-		renderer.render(stage)
+
 	}
 
 );
