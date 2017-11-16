@@ -1,7 +1,8 @@
 define(['core/Game', 'libs/pixi.min'], function(Game){
 	return class Square {
 		constructor(x, y, grid, terrainType){
-				this.coords = [x, y];
+				this.x = x;
+				this.y = y;
 				this.UID = "" + x + y;
 				this.grid = grid;
 				this.maxWidth = grid.width;
@@ -9,7 +10,7 @@ define(['core/Game', 'libs/pixi.min'], function(Game){
 				this.neighbors = this.setNeighbors(x, y);
 				this.terrain = terrainType;
 				this.isExplored = false;
-				this.squareSize = 16;
+				this.squareSize = grid.squareSize;
 			}
 
 		getNeighbors(){
@@ -43,8 +44,8 @@ define(['core/Game', 'libs/pixi.min'], function(Game){
 				this.squareSize)
 
 			ui.endFill();
-			ui.x = this.coords[0]*this.squareSize;
-			ui.y = this.coords[1]*this.squareSize;
+			ui.x = this.x*this.squareSize;
+			ui.y = this.y*this.squareSize;
 
 
 			let dot = new PIXI.Graphics();

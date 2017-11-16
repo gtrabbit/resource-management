@@ -6,9 +6,15 @@ requirejs.config({
 requirejs(['core/Game', 'core/Grid', 'libs/pixi.min'],
 
 	function(Game, Grid){
-		const renderer = PIXI.autoDetectRenderer(window.innerWidth-20, window.innerHeight-20);
-		document.body.appendChild(renderer.view);
-		const stage = new PIXI.Container();
+		const app = new PIXI.Application(
+			window.innerWidth-20,
+			window.innerHeight-20,
+			{backgroundColor: 0x111111})
+		const renderer = app.renderer
+		document.body.appendChild(app.view);
+		const stage = app.stage;
+
+
 		document.getElementById('grow').addEventListener('click', function(){
 			thisGame.update();
 			//renderer.render(stage)
@@ -21,7 +27,7 @@ requirejs(['core/Game', 'core/Grid', 'libs/pixi.min'],
 
 
 		let thisGame = new Game(5, 35, 35, stage, renderer)
-		thisGame.grid = new Grid(thisGame, [3, 3]);
+
 		
 		thisGame.setStage();
 		thisGame.update();

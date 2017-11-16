@@ -1,14 +1,17 @@
 define(['core/Wilds', 'home/Home', 'core/Civic', 'core/Terrain'],
 	function(Wilds, Home, Civic, Terrain){
 	return class Grid{
-		constructor(game, homeStart){
+		constructor(game){
 			this.height = game.height;
 			this.width = game.width;
 			this.rows = [];
 			this.growthRate = game.growthRate;
 			this.game = game;
+			this.squareSize = game.squareSize;
 			this.buildMap();
-			this.home = this.makeHome(homeStart, homeStart.map(a=>a+1));
+			this.homeStart = [~~(this.width/2), ~~(this.height/2)]
+			this.home = this.makeHome(this.homeStart, this.homeStart.map(a=>a+1));
+
 		}
 
 		makeHome(homeStart, homeEnd){
@@ -22,7 +25,7 @@ define(['core/Wilds', 'home/Home', 'core/Civic', 'core/Terrain'],
 					 	y,
 					 	this,
 					 	this.rows[x][y].terrain);					
-					this.convertTile([x,y], starter)
+					this.convertTile(x, y, starter)
 					home.territory.push(starter);
 				}
 			}
@@ -31,10 +34,10 @@ define(['core/Wilds', 'home/Home', 'core/Civic', 'core/Terrain'],
 			return home
 		}
 
-		convertTile(coords, tile){
-			this.game.stage.removeChild(this.rows[coords[0]].splice(coords[1], 1, tile))
+		convertTile(x, y, tile){
+			this.game.map.removeChild(this.rows[x].splice(y, 1, tile))
 			tile.makeUI();
-			this.game.stage.addChild(tile.ui);
+			this.game.map.addChild(tile.ui);
 			if (this.home && tile.type === 'civic'){
 				this.home.territory.push(tile);
 			}
@@ -59,9 +62,9 @@ define(['core/Wilds', 'home/Home', 'core/Civic', 'core/Terrain'],
 					let square = this.rows[a[0]][a[1]];
 					chance += square.hasOwnProperty('dangerValue') ? square.getDanger() : 1;	
 					})
-				if (tile.terrain === 'hills') chance * 3 && value++;
-				if (tile.terrain === 'forest') chance * 2 && value++;
-				if (chance > (Math.random() * (tile.growthRate * 60)) + 7.5){
+				if (tile.terrain === 'hills') chance * 6;
+				if (tile.terrain === 'forest') chance * 4;
+				if (chance > (Math.random() * (tile.growthRate * 10)) + 7.5){
 					tile.setDanger(tile.getDanger() + value);
 				} 
 			} else {
