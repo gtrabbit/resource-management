@@ -25,8 +25,7 @@ define([], function(){
 			canceler.interactive = true;
 			canceler.buttonMode = true;
 
-			messageContainer.addChild(militiaCommited);
-			messageContainer.addChild(canceler);
+			messageContainer.addChild(militiaCommited, canceler);
 			dvMsg.position.set(150, 20);
 			militiaCommited.position.set(0, 20)
 			canceler.position.set(10, 40);
@@ -40,8 +39,7 @@ define([], function(){
 			const increase = new PIXI.Text('more', style);
 			const decrease = new PIXI.Text('less', style);
 			const adBox = new PIXI.Container();
-			adBox.addChild(increase);
-			adBox.addChild(decrease);
+			adBox.addChild(increase, decrease);
 			increase.interactive = true;
 			decrease.interactive = true;
 			increase.buttonMode = true;
@@ -71,13 +69,9 @@ define([], function(){
 				tile.confirmExpedition();
 			})
 
-
-			messageContainer.addChild(qMsg)
-			messageContainer.addChild(militiaCommited)
-			messageContainer.addChild(milMsg)
-			messageContainer.addChild(adBox)
-			messageContainer.addChild(winPropMsg)	
-			messageContainer.addChild(confirmation)
+			messageContainer.addChild(
+				qMsg, militiaCommited, milMsg,
+				adBox, winPropMsg, confirmation)
 
 			qMsg.position.set(0, 20);
 			milMsg.position.set(0, 80);
@@ -85,8 +79,6 @@ define([], function(){
 			adBox.position.set(0, 100)
 			winPropMsg.position.set(20, 120)
 			confirmation.position.set(20, 160)
-
-
 			}
 
 			return messageContainer;

@@ -1,4 +1,4 @@
-define(['core/Grid'], function(Grid){
+define(['core/Grid', 'ui/eventresults'], function(Grid, EventResults){
 	
 
 	return class Game{
@@ -16,12 +16,12 @@ define(['core/Grid'], function(Grid){
 			this.events = [];
 			this.basicFontStyle = {
 					fontFamily: 'Georgia',
-					fontSize: 14,
+					fontSize: '10pt',
 					wordWrap: true,
 					wordWrapWidth: 230,
 					padding: 10
 				}  //just for now. something better later for sure
-				
+			this.eventsDisplay = this.setupEventsBox();	
 		}
 
 		makeMap(){
@@ -53,10 +53,18 @@ define(['core/Grid'], function(Grid){
 			}
 
 			function onDragMove(){
+				
 				if (this.dragging){
 					let newPosition = this.data.getLocalPosition(this.parent);
-					this.x = newPosition.x;
-					this.y = newPosition.y;
+					let xBound = newPosition.x - this.pivot.x;
+					let yBound = newPosition.y - this.pivot.y;
+
+					if (xBound < 100 && xBound > -600 && yBound < 100 && yBound > -600){
+						this.x = newPosition.x;
+						this.y = newPosition.y;
+					}
+					
+					
 				}
 			}
 			return map;
@@ -85,19 +93,66 @@ define(['core/Grid'], function(Grid){
 			return textBox;
 		}
 
-		resolveEvents(){
-			for (let event of this.events){
-				event.resolve()
+		showEventResults(results){
+			this.events= [];
+			EventResults(results, this.turns);
+		}
+
+		setupEventsBox(){
+			const box = document.getElementById('event-results-box');
+			const container = document.getElementById('event-results-container');
+			container.close = ()=>{
+				container.style.display = 'none';
 			}
+			box.currentlyDisplayedChild = 0;
+			box.changeDisplayChild = (dir)=>{
+				box.children[box.currentlyDisplayedChild].moveOutOfView();
+
+				box.children[box.currentlyDisplayedChild+=dir].comeIntoView();
+			}
+
+			const close = document.getElementById('close');
+			close.addEventListener('click', ()=>{
+				container.close();
+			})
+
+			const next = document.getElementById('next');
+			const back = document.getElementById('back');
+			back.setAttribute('disabled', true);
+
+			next.addEventListener('click', ()=>{
+				if (box.children.length > box.currentlyDisplayedChild+1){
+					box.changeDisplayChild(1);
+					back.setAttribute('disabled', false);
+					if (box.children.length === box.currentlyDisplayedChild+1){
+						next.setAttribute('disabled', true);
+					}
+				} else {
+					next.setAttribute('disabled', true);
+				}
+				
+			})
+			
+			back.addEventListener('click', ()=>{
+				if (0 < box.currentlyDisplayedChild){
+					box.changeDisplayChild(-1);
+					next.setAttribute('disabled', true);
+					if (box.currentlyDisplayedChild === 0){
+						back.setAttribute('disabled', true);
+					}
+				}
+				box.changeDisplayChild(-1);
+			})
+			return container;
 		}
 
 		update(){
+			this.map.removeChild(this.infoWindow);
 			this.turns++;
+			this.showEventResults(this.events.map(a=>a.resolve()));
 			this.grid.home.update();
 			this.grid.update();
-			this.resolveEvents();
-			console.log(this.turns)
-
+			
 		}
 
 		setStage(){
@@ -108,6 +163,7 @@ define(['core/Grid'], function(Grid){
 				})
 			})
 			this.stage.addChildAt(this.map, 0);
+
 		}
 	
 	}

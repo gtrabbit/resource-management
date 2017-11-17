@@ -86,7 +86,7 @@ define(['core/Square', 'core/Civic', 'events/expedition', 'ui/makeexpeditionuiwi
 			
 			showOptions(){
 				if (!this.expedition.hasOwnProperty('confirmed') && !this.expedition.confirmed){
-					this.expedition = new Expedition(this.grid.home.population.militia, this.UID, this.getDanger())
+					this.expedition = new Expedition(this)
 				}
 				const iw = this.grid.game.infoWindow;
 				this.grid.game.map.removeChild(iw);
@@ -104,7 +104,6 @@ define(['core/Square', 'core/Civic', 'events/expedition', 'ui/makeexpeditionuiwi
 				 	this.grid,
 				 	this.terrain);
 				this.grid.convertTile(this.x, this.y, starter);
-				this.grid.game.update();
 			}
 
 			render(){

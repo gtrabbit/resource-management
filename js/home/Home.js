@@ -1,4 +1,4 @@
-define(['core/Civic'], function(Civic){
+define(['core/Civic', 'ui/homedisplay'], function(Civic, homeDisplay){
 
 	return class Home {
 		constructor(grid, topLeft, botRight, startingResources, startingPopulation){
@@ -43,10 +43,8 @@ define(['core/Civic'], function(Civic){
 					'popGrowth': 0.02
 				}
 			}
-
-
-			this.display = this.makeDisplay();
-
+			this.display = homeDisplay();
+			this.grid.game.stage.addChild(this.display.container);
 		}
 
 		addResource(typeAmount){
@@ -55,10 +53,7 @@ define(['core/Civic'], function(Civic){
 				.forEach(a=>{
 					this.resources[a] += typeAmount[a];
 				})
-		}
-
-		makeDisplay(){
-
+			this.updateDisplay();
 		}
 
 		getResources(type){
@@ -74,19 +69,20 @@ define(['core/Civic'], function(Civic){
 		disband(citizen){
 			this.population[citizen]--;
 			this.population.commoners++;
+			this.updateDisplay();
 		}
 
 		getTotalPopulation(){
-
 			return Object.keys(this.population)
 				.reduce((a, b)=>(a+this.population[b]), 0)
 		}
 
 		addCitizen(citizen){
 			if (this.caps[citizen] > this.population[citizen]
-				&& this.caps.total > this.getTotalPopulation() - this.population.militia)
-				{ 
+				&& this.caps.total > this.getTotalPopulation() - this.population.militia){ 
+
 				this.population[citizen] += 1;
+				this.updateDisplay();
 			} else {
 				return false;
 			}	
@@ -113,9 +109,18 @@ define(['core/Civic'], function(Civic){
 			this.determineLosses(popDef + this.baseDefense);
 		}
 
-		determineLosses(def){
-			this.findPerimeterDanger(this.territory)
+		updateDisplay(){
+			const numbers = {...this.population, ...this.resources};
+			Object.keys(numbers).forEach(a=>{
+				this.display[a].text = this.display[a].text.replace(/\d+/, numbers[a])
+			})
+		}
+
 		
+		determineLosses(def){
+			//need to flesh this out
+			this.findPerimeterDanger(this.territory)
+			
 		}
 
 		findPerimeterDanger(territory){

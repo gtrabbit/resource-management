@@ -1,0 +1,25 @@
+body {
+	background-color: black;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.event-results-container {
+	display: none;
+	position: fixed;
+	margin: 10vh 10vw;
+	padding: 1vw;
+	height: 70vh;
+	width: 78vw;
+	background-color: white;
+	box-shadow: 0 0 22px 12px black;
+}
+
+.application {
+	display: block;
+	margin: auto;
+	border: double brown 2px;
+}

@@ -18,7 +18,8 @@ define(['core/Square'], function(Square){
 		}
 
 		setListener(){
-			
+			this.ui.interactive = true;
+			this.ui.on('pointerup', ()=>{console.log(this)});
 		}
 	}
 

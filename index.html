@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 
 	<title>Simple Game</title>
 	<script data-main="js/main" src="js/libs/require.js" async defer></script>
@@ -12,8 +12,17 @@
 
 		<button id="grow"> Start </button>
 		<button id="log"> Log </button>
-	 	<button id="stop"> Stop </button>
-
+	 	<section id="event-results-container" class="event-results-container">
+	 		<h2 id="day-counter" class="day-counter"></h2>
+	 		<nav class="results-nav">
+	 			<button id="back">Back</button>
+	 			<button id="next">Next</button>
+	 			<button id="close"> Close </button>
+	 		</nav>
+	 		<div id="event-results-box">
+	 			
+	 		</div>
+	 	</section> 
 	</main>
 
 

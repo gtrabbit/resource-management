@@ -59,6 +59,9 @@ define(['core/Wilds', 'home/Home', 'core/Civic', 'core/Terrain'],
 				let chance = 0;
 				let value = 1;
 				tile.getNeighbors().forEach((a) => {
+					if (a.type === 'civic'){
+						this.isExplored = true;
+					}
 					let square = this.rows[a[0]][a[1]];
 					chance += square.hasOwnProperty('dangerValue') ? square.getDanger() : 1;	
 					})

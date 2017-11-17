@@ -1,12 +1,13 @@
 define([], function(){
 	return class Expedition {
-		constructor(mAvail, id, danger){
+		constructor(tile){
 			this.type = 'expedition';
 			this.militia = 0;
-			this.militiaAvailable = mAvail || 0;
-			this.eventId = "ex-" + id || '99999';
-			this.dangerValue = danger || 0;
+			this.militiaAvailable = tile.grid.home.population.militia || 0;
+			this.eventId = "ex-" + tile.UID || '99999';
+			this.dangerValue = tile.getDanger() || 0;
 			this.confirmed = false;
+			this.tile = tile;
 		}
 
 		isValid(){
@@ -18,7 +19,9 @@ define([], function(){
 			let deaths = ~~(Math.max(enemy - this.militia*3, 0)/2)
 			return {
 				defeat: deaths > (this.militia / 2),
-				deaths: Math.min(deaths, this.militia)
+				deaths: Math.min(deaths, this.militia),
+				tile: this.tile,
+				type: this.type
 			}
 		}
 
@@ -38,8 +41,14 @@ define([], function(){
 		}
 
 		resolve(){
-			results = this.determineResults();
-			
+			let results = this.determineResults();
+			if (!results.defeat){
+				this.tile.convertMe();
+			}
+			this.tile.grid.home.population.militia += (this.militia - results.deaths);
+			this.tile.expedition = {};
+			this.tile.setListener();
+			return results;
 		}
 
 	}
