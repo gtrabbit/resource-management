@@ -1,4 +1,4 @@
-define(['core/Grid', 'ui/eventresults'], function(Grid, EventResults){
+define(['core/Grid', 'ui/eventresults', 'events/message'], function(Grid, EventResults, Message){
 	
 
 	return class Game{
@@ -14,14 +14,17 @@ define(['core/Grid', 'ui/eventresults'], function(Grid, EventResults){
 			this.infoWindow = this.makeInfoWindow();
 			this.grid = new Grid(this);
 			this.events = [];
+			this.eventArchive = {};
 			this.basicFontStyle = {
-					fontFamily: 'Georgia',
-					fontSize: '10pt',
-					wordWrap: true,
-					wordWrapWidth: 230,
-					padding: 10
+				fontFamily: 'Georgia',
+				fontSize: '10pt',
+				wordWrap: true,
+				wordWrapWidth: 230,
+				padding: 10
 				}  //just for now. something better later for sure
-			this.eventsDisplay = this.setupEventsBox();	
+			this.welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
+			this.eventsDisplay = this.setupEventsBox();
+
 		}
 
 		makeMap(){
@@ -37,9 +40,7 @@ define(['core/Grid', 'ui/eventresults'], function(Grid, EventResults){
 				.on('pointermove', onDragMove);
 
 			function onDragStart(event){
-				
 				this.data = event.data;
-				
 				let position = this.data.getLocalPosition(this);
 				this.pivot.set(position.x, position.y)
 				this.position.set(this.data.global.x, this.data.global.y)
@@ -49,22 +50,17 @@ define(['core/Grid', 'ui/eventresults'], function(Grid, EventResults){
 			function onDragEnd(){
 				this.dragging=false;
 				this.data = null;
-
 			}
 
 			function onDragMove(){
-				
 				if (this.dragging){
 					let newPosition = this.data.getLocalPosition(this.parent);
 					let xBound = newPosition.x - this.pivot.x;
 					let yBound = newPosition.y - this.pivot.y;
-
 					if (xBound < 100 && xBound > -600 && yBound < 100 && yBound > -600){
 						this.x = newPosition.x;
 						this.y = newPosition.y;
 					}
-					
-					
 				}
 			}
 			return map;
@@ -82,20 +78,18 @@ define(['core/Grid', 'ui/eventresults'], function(Grid, EventResults){
 			textBox.removeChildren();
 			textBox.clear();
 			textBox.lineStyle(3, 0x397be5, 1);
-			
 			let size = message.getBounds();
 			textBox.beginFill(0xFFFFFF);
 			textBox.drawRoundedRect(0, 0, size.width+10, size.height+20, 15);
 			textBox.endFill();
-
 			message.position.set(10, 5)
 			textBox.addChild(message);
 			return textBox;
 		}
 
 		showEventResults(results){
-			this.events= [];
-			EventResults(results, this.turns);
+			this.eventArchive[this.turns] = this.events.splice(0, this.events.length).map(a=>a.resolve());
+			EventResults(this.eventArchive[this.turns], this.turns);
 		}
 
 		setupEventsBox(){
@@ -104,11 +98,16 @@ define(['core/Grid', 'ui/eventresults'], function(Grid, EventResults){
 			container.close = ()=>{
 				container.style.display = 'none';
 			}
-			box.currentlyDisplayedChild = 0;
-			box.changeDisplayChild = (dir)=>{
-				box.children[box.currentlyDisplayedChild].moveOutOfView();
-
-				box.children[box.currentlyDisplayedChild+=dir].comeIntoView();
+			box.currentlyDisplayedChild = -1;
+			box.changeDisplayChild = function(dir){
+				if (this.currentlyDisplayedChild > -1){
+					this.children[this.currentlyDisplayedChild].style.display = 'none';
+				}
+				
+				this.currentlyDisplayedChild += dir;
+				this.children[this.currentlyDisplayedChild].style.display = 'block';
+				document.getElementById('day-counter').innerText = `Day ${this.currentlyDisplayedChild+1}`
+				return this.currentlyDisplayedChild;
 			}
 
 			const close = document.getElementById('close');
@@ -117,39 +116,34 @@ define(['core/Grid', 'ui/eventresults'], function(Grid, EventResults){
 			})
 
 			const next = document.getElementById('next');
+			next.setAttribute('disabled', true);
 			const back = document.getElementById('back');
 			back.setAttribute('disabled', true);
-
+			
 			next.addEventListener('click', ()=>{
-				if (box.children.length > box.currentlyDisplayedChild+1){
-					box.changeDisplayChild(1);
-					back.setAttribute('disabled', false);
-					if (box.children.length === box.currentlyDisplayedChild+1){
-						next.setAttribute('disabled', true);
-					}
-				} else {
+				box.changeDisplayChild(1);
+				back.removeAttribute('disabled');
+				if (box.children.length === box.currentlyDisplayedChild+1){
 					next.setAttribute('disabled', true);
 				}
-				
 			})
 			
 			back.addEventListener('click', ()=>{
-				if (0 < box.currentlyDisplayedChild){
-					box.changeDisplayChild(-1);
-					next.setAttribute('disabled', true);
-					if (box.currentlyDisplayedChild === 0){
-						back.setAttribute('disabled', true);
-					}
-				}
 				box.changeDisplayChild(-1);
+				next.removeAttribute('disabled');
+				if (box.currentlyDisplayedChild === 0){
+					back.setAttribute('disabled', true);
+				}
+
 			})
+			this.events.push(this.welcomeMessage);
 			return container;
 		}
 
 		update(){
 			this.map.removeChild(this.infoWindow);
 			this.turns++;
-			this.showEventResults(this.events.map(a=>a.resolve()));
+			this.showEventResults();
 			this.grid.home.update();
 			this.grid.update();
 			
@@ -172,3 +166,11 @@ define(['core/Grid', 'ui/eventresults'], function(Grid, EventResults){
 
 
 	
+// eventArchive = {
+// 	day: [
+// 		events, events, events
+// 	],
+// 	day: [
+// 		events, events, events
+// 	]
+// }

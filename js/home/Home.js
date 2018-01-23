@@ -1,10 +1,12 @@
-define(['core/Civic', 'ui/homedisplay'], function(Civic, homeDisplay){
+define(['core/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects', 'utils/cloneObject'], 
+	function(Civic, homeDisplay, Message, compareObjects, cloneObject){
 
 	return class Home {
 		constructor(grid, topLeft, botRight, startingResources, startingPopulation){
 			this.territory = [];
 			this.resources = startingResources;
 			this.grid = grid;
+			this.game = grid.game
 			this.baseDefense = 10;
 			this.population = startingPopulation;
 			this.popGrowth = 0;
@@ -44,7 +46,7 @@ define(['core/Civic', 'ui/homedisplay'], function(Civic, homeDisplay){
 				}
 			}
 			this.display = homeDisplay();
-			this.grid.game.stage.addChild(this.display.container);
+			this.game.stage.addChild(this.display.container);
 		}
 
 		addResource(typeAmount){
@@ -58,6 +60,14 @@ define(['core/Civic', 'ui/homedisplay'], function(Civic, homeDisplay){
 
 		getResources(type){
 			return this.resources[type];
+		}
+
+		getAllResources(){
+			return cloneObject(this.resources);
+		}
+
+		getAllPopulation(){
+			return cloneObject(this.population);
 		}
 
 		checkCost(cost){
@@ -90,6 +100,9 @@ define(['core/Civic', 'ui/homedisplay'], function(Civic, homeDisplay){
 
 		update(){
 			let popDef = 0;
+			let previousResources = this.getAllResources();
+			let previousPopulation = this.getAllPopulation();
+
 			for (let key in this.population){
 				for (let x = 0; x < this.population[key]; x++){
 					if (this.checkCost(this.costs[key])){
@@ -106,8 +119,46 @@ define(['core/Civic', 'ui/homedisplay'], function(Civic, homeDisplay){
 					}
 				}
 			}
+
+			this.summarizeGrowth([previousResources, previousPopulation], [this.resources, this.population]);
 			this.determineLosses(popDef + this.baseDefense);
 		}
+
+
+
+		summarizeGrowth(oldValues, newValues){
+			const resChanges = compareObjects(oldValues[0], newValues[0]);
+			const popChanges = compareObjects(oldValues[1], newValues[1]);
+			const resSummaries = [];
+			const popSummaries = [];
+
+			for (let key in resChanges){
+				if (resChanges[key] !== 0){
+					let verb = resChanges[key] > 0 ? 'gained' : 'lost';
+					resSummaries.push(`You have ${verb} ${Math.abs(resChanges[key])} ${key}.`);
+				}
+			}
+
+			if (resSummaries.length < 1){
+				resSummaries.push('Nothing new to report')
+			}
+			this.game.events.push(new Message('Treasurer\'s Log:', resSummaries));
+
+			for (let key in popChanges){
+				if (popChanges[key] !== 0){
+
+					let verb = popChanges[key] > 0 ? 'gained' : 'lost';
+					let explanation = popChanges[key] > 0 ? '' : 'due to the shortage of resources'
+					popSummaries.push(`The city has ${verb} ${Math.abs(popChanges[key])} ${key} ${explanation}`)
+				}
+			}
+
+			if (popSummaries.length < 1){
+				popSummaries.push('Nothing new to report');
+			}
+			this.game.events.push(new Message('Office of the Census:', popSummaries));
+		}
+
 
 		updateDisplay(){
 			const numbers = {...this.population, ...this.resources};

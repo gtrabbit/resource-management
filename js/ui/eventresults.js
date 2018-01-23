@@ -11,12 +11,14 @@ define(function(){
 	return function EventResults(results, turns){
 		const eventResultContainer = document.getElementById('event-results-container');
 		const eventResultBox = document.getElementById('event-results-box');
-
-		document.getElementById('day-counter').innerText = `Day ${turns}`
+		const day = document.createElement('div');
+		day.className = 'day-box';
+		day.id = `day-${turns}`;
+		eventResultBox.appendChild(day);
 		results.forEach(a=>{
 			const display = document.createElement('div');
 			display.className = 'event-result';
-			eventResultBox.appendChild(display)
+			eventResultBox.appendChild(display);
 			display.comeIntoView = comeIntoView;
 			display.moveOutOfView = moveOutOfView;
 			switch(a.type){
@@ -28,12 +30,29 @@ define(function(){
 					display.appendChild(title);
 					display.appendChild(contents);
 					break;
+				case 'message':
+					const msgTitle = document.createElement('h3');
+					msgTitle.innerText = a.title;
+					const body = document.createElement('div');
+					for (let msg of a.contents){
+						let msgContents = document.createElement('p');
+						msgContents.innerText = msg;
+						body.appendChild(msgContents);
+					}
+					display.appendChild(msgTitle);
+					display.appendChild(body);
+					break;
 				default:
 					console.log("something unexpected", a)
 
 			}
+			day.appendChild(display)
 		})
-		eventResultContainer.style.display = 'flex';
+		if (turns > 1){
+			document.getElementById('back').removeAttribute('disabled');
+		}
+		eventResultBox.changeDisplayChild(1);
+		eventResultContainer.style.display = 'block';
 	}
 
 

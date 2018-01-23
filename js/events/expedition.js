@@ -16,7 +16,7 @@ define([], function(){
 
 		determineResults(){
 			let enemy = ((this.dangerValue*2) + ~~(Math.random() * this.dangerValue) ) * 2;
-			let deaths = ~~(Math.max(enemy - this.militia*3, 0)/2)
+			let deaths = ~~(Math.max(enemy - this.militia*3, 0)/2);
 			return {
 				defeat: deaths > (this.militia / 2),
 				deaths: Math.min(deaths, this.militia),
