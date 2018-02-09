@@ -1,4 +1,4 @@
-define(['libs/pixi.min'], function(){
+define([], function(){
 	return function(){
 		const style = new PIXI.TextStyle({
 			stroke: 'white',
@@ -9,7 +9,8 @@ define(['libs/pixi.min'], function(){
 		})
 
 		const container = new PIXI.Container();
-		const militia = new PIXI.Text('Militia\n 0', style);
+		const militia = new PIXI.Text('Militia\n 0 /      ', style);
+		const militiaAvailable = new PIXI.Text('(0)', style);
 		const farmers = new PIXI.Text('Farmers\n 0', style);
 		const artisans = new PIXI.Text('Artisans\n 0', style);
 		const woodsmen = new PIXI.Text('Woodsmen\n 0', style);
@@ -27,9 +28,10 @@ define(['libs/pixi.min'], function(){
 			a.position.set(15 + (i*70), 5)
 		})
 
+		militiaAvailable.position.set(117, 18);
 		const backing = new PIXI.Graphics();
 
-		container.addChild(backing, militia, farmers, artisans,
+		container.addChild(backing, militia, militiaAvailable, farmers, artisans,
 			woodsmen, commoners, silver, wood, food);
 		
 		let size = container.getBounds();
@@ -41,6 +43,7 @@ define(['libs/pixi.min'], function(){
 		return {
 			container,
 			militia,
+			militiaAvailable,
 			farmers,
 			artisans,
 			woodsmen,

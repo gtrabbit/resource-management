@@ -9,12 +9,14 @@ define(['tiles/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects
 			this.game = grid.game
 			this.baseDefense = 10;
 			this.population = startingPopulation;
+			this.militiaAvailable = startingPopulation.militia;
 			this.popGrowth = 0;
 			this.caps = {
 				'farmers': 10,
 				'artisans': 5,
 				'woodsmen': 8,
 				'militia': 5,
+				'militiaAvailable': Infinity,
 				'commoners': Infinity,
 				'total': 50
 			}
@@ -87,11 +89,11 @@ define(['tiles/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects
 				.reduce((a, b)=>(a+this.population[b]), 0)
 		}
 
-		addCitizen(citizen){
-			if (this.caps[citizen] > this.population[citizen]
+		modifyPopulace(type, amount){
+			if (this.caps[type] > this.population[type]
 				&& this.caps.total > this.getTotalPopulation() - this.population.militia){ 
 
-				this.population[citizen] += 1;
+				this.population[type] += amount;
 				this.updateDisplay();
 			} else {
 				return false;
@@ -104,20 +106,24 @@ define(['tiles/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects
 			let previousPopulation = this.getAllPopulation();
 
 			for (let key in this.population){
-				for (let x = 0; x < this.population[key]; x++){
-					if (this.checkCost(this.costs[key])){
-						this.addResource(this.costs[key])
-						this.popGrowth += this.costs[key].popGrowth;
-						if (this.popGrowth > 1){
-							this.popGrowth --;
-							this.addCitizen('commoners');
+				if (key !== 'militiaAvailable'){
+					for (let x = 0; x < this.population[key]; x++) {
+						if (this.checkCost(this.costs[key])) {
+							this.addResource(this.costs[key])
+							this.popGrowth += this.costs[key].popGrowth;
+							if (this.popGrowth > 1) {
+								this.popGrowth--;
+								this.modifyPopulace('commoners', 1);
+							}
+							popDef += key === 'militia' ? 4 : 0;
+							popDef += key === 'woodsmen' ? 1 : 0;
+						} else {
+							this.disband(key)
 						}
-						popDef += key === 'militia' ? 4 : 0;
-						popDef += key === 'woodsmen' ? 1 : 0;
-					} else {
-						this.disband(key)
 					}
-				}
+				} else {
+					this.population.militiaAvailable = this.population.militia;
+				}	
 			}
 
 			this.summarizeGrowth([previousResources, previousPopulation], [this.resources, this.population]);

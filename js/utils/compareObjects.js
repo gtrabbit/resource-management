@@ -1,10 +1,11 @@
 //used when updating resources/population totals
+//ignores the militia available property
 
 define([], function(){
     return function(a, b){
         let results = {};
         for (let key in b){
-            results[key] = b[key] - a[key];
+            if (key !== 'militiaAvailable') results[key] = b[key] - a[key];
         }
         return results;
     }

@@ -1,4 +1,4 @@
-define(['core/Game', 'libs/pixi.min'], function(Game){
+define(['core/Game'], function(Game){
 	return class Square {
 		constructor(x, y, grid, terrainType){
 				this.x = x;

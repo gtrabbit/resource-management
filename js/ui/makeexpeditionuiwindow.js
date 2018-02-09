@@ -5,11 +5,14 @@ define([], function(){
 		closer.interactive = true;
 		closer.buttonMode = true;
 		closer.on('click', ()=>{
-			tile.closeIw();
+			closeIw();
 		})
 
 
 
+		function closeIw(){
+			iw.parent.removeChild(iw);
+		}
 
 		closer.position.set(240, 0);
 		messageContainer.addChild(closer)
@@ -30,7 +33,8 @@ define([], function(){
 			militiaCommited.position.set(0, 20)
 			canceler.position.set(10, 40);
 			canceler.on('click', ()=>{
-				tile.cancelExpedition()
+				expedition.cancelExpedition();
+				closeIw();
 			})
 
 		} else {
@@ -46,14 +50,14 @@ define([], function(){
 			decrease.buttonMode = true;
 			increase.on('click', ()=>{
 	
-				if (tile.expedition.militiaAvailable > 0){
-					tile.adjustMilitia(1, messageContainer, milMsg, militiaCommited, winPropMsg)
+				if (expedition.militiaAvailable > 0){
+					expedition.adjustMilitia(1, messageContainer, milMsg, militiaCommited, winPropMsg)
 				}
 				
 			});
 			decrease.on('click', ()=>{
-				if (tile.expedition.militia > 0){
-					tile.adjustMilitia(-1, messageContainer, milMsg, militiaCommited, winPropMsg)
+				if (expedition.militia > 0){
+					expedition.adjustMilitia(-1, messageContainer, milMsg, militiaCommited, winPropMsg)
 				}
 			});
 
@@ -66,7 +70,7 @@ define([], function(){
 			confirmation.interactive = true;
 			confirmation.buttonMode = true;
 			confirmation.on('click', ()=>{
-				tile.confirmExpedition();
+				expedition.confirmExpedition();
 			})
 
 			messageContainer.addChild(

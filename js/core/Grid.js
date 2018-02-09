@@ -9,15 +9,15 @@ define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 			this.game = game;
 			this.squareSize = game.squareSize;
 			this.buildMap();
-			this.homeStart = [~~(this.width/2), ~~(this.height/2)] //this needs to be functions that finds an open field
+			this.homeStart = [~~(this.width/2), ~~(this.height/2)]; //this needs to be a function that finds an open field (eventually)
 			this.home = this.makeHome(this.homeStart, this.homeStart.map(a=>a+1));
 		}
 
-		//should this be somewhere else?
+		//should this be somewhere else? --ideally, home should be able to handle this? like, a Home.init()
 		makeHome(homeStart, homeEnd){
 			let home = new Home(this, homeStart, homeEnd,
 			{'food': 20, 'wood': 10, 'silver': 50}, // pass in starting resource values based on difficulty at some point
-			{'farmers': 2, 'militia': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1});
+			{ 'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1 }); // pass in starting resource values based on difficulty at some point
 			for (let x = homeStart[0]; x <= homeEnd[0]; x++){
 				for (let y = homeStart[1]; y <= homeEnd[1]; y++){
 					let starter = new Civic(
@@ -29,9 +29,9 @@ define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 					home.territory.push(starter);
 				}
 			}
-			home.territory[0].terrain = 'field'
+			home.territory[0].terrain = 'field';
 			home.territory[0].build('farm');
-			return home
+			return home;
 		}
 
 
@@ -51,13 +51,16 @@ define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 					this.updateTile(this.rows[col][square]);
 				}
 			}
-		} // ends update function
+		} 
 
 
-// TODO: Store the functions for each switch case in individual files
+// TODO: Store the functions for each switch case in individual files?? if this gets really big, which it might...
 
 		updateTile(tile){
 			if (tile.type === 'wilds'){
+				if (!tile.expedition.confirmed){
+					tile.expedition = {};
+				}
 				let chance = 0;
 				let value = 1;
 				tile.getNeighbors().forEach((a) => {
@@ -91,7 +94,7 @@ define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 					col.push(square);
 				}	
 			}
-			Terrain.generateTerrain(this.rows)
-		} //ends build
+			Terrain.generateTerrain(this.rows);
+		}
 	}
 })

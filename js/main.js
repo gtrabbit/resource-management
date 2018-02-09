@@ -20,8 +20,8 @@ requirejs(['core/Game', 'core/Grid', 'node_modules/pixi.js/dist/pixi.min.js'],
 		document.getElementById('log').addEventListener('click', function(){
 			console.log(thisGame)
 		})
-
-		const thisGame = new Game(5, 35, 35, stage, renderer)
+		const animationHook = app.ticker;
+		const thisGame = new Game(5, 35, 35, stage, renderer, animationHook)
 
 		thisGame.setStage();
 		thisGame.update();
