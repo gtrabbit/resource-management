@@ -9,14 +9,14 @@ define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 			this.game = game;
 			this.squareSize = game.squareSize;
 			this.buildMap();
-			this.homeStart = [~~(this.width/2), ~~(this.height/2)]
+			this.homeStart = [~~(this.width/2), ~~(this.height/2)] //this needs to be functions that finds an open field
 			this.home = this.makeHome(this.homeStart, this.homeStart.map(a=>a+1));
-
 		}
 
+		//should this be somewhere else?
 		makeHome(homeStart, homeEnd){
 			let home = new Home(this, homeStart, homeEnd,
-			{'food': 20, 'wood': 10, 'silver': 50},
+			{'food': 20, 'wood': 10, 'silver': 50}, // pass in starting resource values based on difficulty at some point
 			{'farmers': 2, 'militia': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1});
 			for (let x = homeStart[0]; x <= homeEnd[0]; x++){
 				for (let y = homeStart[1]; y <= homeEnd[1]; y++){
@@ -34,6 +34,8 @@ define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 			return home
 		}
 
+
+		//coords x, y + target tile
 		convertTile(x, y, tile){
 			this.game.map.removeChild(this.rows[x].splice(y, 1, tile))
 			tile.makeUI();
@@ -59,7 +61,7 @@ define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 				let chance = 0;
 				let value = 1;
 				tile.getNeighbors().forEach((a) => {
-					if (a.type === 'civic'){
+					if (a.type === 'civic' && this.isExplored != true){
 						this.isExplored = true;
 					}
 					let square = this.rows[a[0]][a[1]];
@@ -74,10 +76,10 @@ define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 				// civic tiles just do nothing? for now at least
 				//though this could be the place where we decide if
 				//a civic tile will be destroyed by the wilds
+				//alternatively, we could gather relevant resources? (not sure, since citizens won't populate specific tiles)
 			}
 
 			tile.render();
-
 		}
 
 		buildMap(){

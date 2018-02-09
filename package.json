@@ -1,0 +1,29 @@
+{
+  "name": "resource-management",
+  "version": "1.0.0",
+  "description": "simple game using PIXI",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gtrabbit/resource-management.git"
+  },
+  "keywords": [
+    "game",
+    "pixi",
+    "html5",
+    "canvas"
+  ],
+  "author": "gtrabbit",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gtrabbit/resource-management/issues"
+  },
+  "homepage": "https://github.com/gtrabbit/resource-management#readme",
+  "dependencies": {
+    "pixi.js": "^4.7.0",
+    "requirejs": "^2.3.5"
+  }
+}

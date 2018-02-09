@@ -1,4 +1,4 @@
-define(['core/Grid', 'ui/eventresults', 'events/message'], function(Grid, EventResults, Message){
+define(['core/Grid', 'ui/eventresults', 'events/message', 'ui/map/Map.js'], function(Grid, EventResults, Message, Map){
 	
 
 	return class Game{
@@ -8,7 +8,7 @@ define(['core/Grid', 'ui/eventresults', 'events/message'], function(Grid, EventR
 			this.height = height;
 			this.stage = stage;
 			this.squareSize = 32;
-			this.map = this.makeMap();
+			this.map = Map.map(width, height, squareSize);
 			this.renderer = renderer;
 			this.turns = 0;
 			this.infoWindow = this.makeInfoWindow();
@@ -25,47 +25,6 @@ define(['core/Grid', 'ui/eventresults', 'events/message'], function(Grid, EventR
 			this.welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
 			this.eventsDisplay = this.setupEventsBox();
 
-		}
-
-		
-
-		makeMap(){
-			let map = new PIXI.Container();
-			map.interactive = true;
-			map.x = this.width*(this.squareSize/2) + 20;
-			map.y = this.height*(this.squareSize/2) + 20;
-			map.pivot.set(this.width*(this.squareSize/2) + 20, this.height*(this.squareSize/2) + 20)
-			map
-				.on('pointerdown', onDragStart)
-				.on('pointerup', onDragEnd)
-				.on('pointerupoutside', onDragEnd)
-				.on('pointermove', onDragMove);
-
-			function onDragStart(event){
-				this.data = event.data;
-				let position = this.data.getLocalPosition(this);
-				this.pivot.set(position.x, position.y)
-				this.position.set(this.data.global.x, this.data.global.y)
-				this.dragging = true;
-			}	
-
-			function onDragEnd(){
-				this.dragging=false;
-				this.data = null;
-			}
-
-			function onDragMove(){
-				if (this.dragging){
-					let newPosition = this.data.getLocalPosition(this.parent);
-					let xBound = newPosition.x - this.pivot.x;
-					let yBound = newPosition.y - this.pivot.y;
-					if (xBound < 100 && xBound > -600 && yBound < 100 && yBound > -600){
-						this.x = newPosition.x;
-						this.y = newPosition.y;
-					}
-				}
-			}
-			return map;
 		}
 
 		makeInfoWindow(){

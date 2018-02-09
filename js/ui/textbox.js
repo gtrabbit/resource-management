@@ -1,3 +1,5 @@
+// pretty this up some day
+
 define([], function(){
 	return function Textbox(message){
 		let textBox = new PIXI.Graphics();

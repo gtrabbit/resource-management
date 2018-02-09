@@ -1,4 +1,4 @@
-define(['core/Square'], function(Square){
+define(['tiles/Square'], function(Square){
 	return class Civic extends Square {
 		constructor(x, y, grid, terrain){
 			super(x, y, grid, terrain);

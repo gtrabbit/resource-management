@@ -2,7 +2,7 @@ requirejs.config({
 	baseUrl: 'js'
 })
                      //don't need this?
-requirejs(['core/Game', 'core/Grid', 'libs/pixi.min'],
+requirejs(['core/Game', 'core/Grid', 'node_modules/pixi.js/dist/pixi.min.js'],
 
 	function(Game, Grid){
 		const app = new PIXI.Application(
