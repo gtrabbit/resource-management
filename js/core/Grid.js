@@ -1,5 +1,5 @@
-define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
-	function(Wilds, Home, Civic, Terrain){
+define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
+	function(Home, Terrain, TileFactory){
 	return class Grid{
 		constructor(game){
 			this.height = game.height;
@@ -20,12 +20,9 @@ define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 			{ 'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1 }); // pass in starting resource values based on difficulty at some point
 			for (let x = homeStart[0]; x <= homeEnd[0]; x++){
 				for (let y = homeStart[1]; y <= homeEnd[1]; y++){
-					let starter = new Civic(
-						x,
-					 	y,
-					 	this,
-					 	this.rows[x][y].terrain);					
-					this.convertTile(x, y, starter)
+					let starter = TileFactory(
+						'civic', x, y, this, this.rows[x][y].terrain)					
+					this.replaceTile(x, y, starter)
 					home.territory.push(starter);
 				}
 			}
@@ -35,8 +32,13 @@ define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 		}
 
 
+		convertTile(targetType, x, y, terrain){
+			const newTile = TileFactory(targetType, x, y, this, terrain, this.growthRate);
+			this.replaceTile(x, y, newTile);
+		}
+
 		//coords x, y + target tile
-		convertTile(x, y, tile){
+		replaceTile(x, y, tile){
 			this.game.map.removeChild(this.rows[x].splice(y, 1, tile))
 			tile.makeUI();
 			this.game.map.addChild(tile.ui);
@@ -90,7 +92,7 @@ define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 				let col = [];
 				this.rows.push(col)
 				for (let y = 0; y < this.height; y++){
-					let square = new Wilds(x, y, this, 'field', this.growthRate);
+					let square = TileFactory('wilds', x, y, this, 'field', this.growthRate);
 					col.push(square);
 				}	
 			}

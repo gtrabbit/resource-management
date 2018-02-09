@@ -1,4 +1,4 @@
-define(['tiles/Square', 'tiles/Civic', 'events/expedition', 'ui/makeexpeditionuiwindow'], function(Square, Civic, Expedition, MakeExpeditionUIWindow){
+define(['tiles/Square', 'events/expedition', 'ui/makeexpeditionuiwindow'], function(Square, Expedition, MakeExpeditionUIWindow){
 	return class Wilds extends Square{
 			constructor(x, y, grid, terrain, growthRate){
 				super(x, y, grid, terrain);
@@ -42,12 +42,7 @@ define(['tiles/Square', 'tiles/Civic', 'events/expedition', 'ui/makeexpeditionui
 
 //this should probably not require knowledge of an outside class?
 			convertMe(){
-				let starter = new Civic(
-					this.x,
-				 	this.y,
-				 	this.grid,
-				 	this.terrain);
-				this.grid.convertTile(this.x, this.y, starter);
+				this.grid.convertTile('civic', this.x, this.y, this.terrain);
 			}
 
 			render(){
@@ -58,9 +53,7 @@ define(['tiles/Square', 'tiles/Civic', 'events/expedition', 'ui/makeexpeditionui
 					this.ui.interactive = true;
 					this.ui.buttonMode = true;
 				}
-
 				this.ui.children[0].alpha = this.getDanger()/20;
 			}
-
 		}
 })

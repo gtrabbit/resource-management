@@ -1,13 +1,5 @@
 define(function(){
 
-	const comeIntoView = ()=>{
-		this.style.zIndex = 20;
-	}
-
-	const moveOutOfView = ()=>{
-		this.style.zIndex = 1;
-	}
-
 	return function EventResults(results, turns){
 		const eventResultContainer = document.getElementById('event-results-container');
 		const eventResultBox = document.getElementById('event-results-box');
@@ -19,8 +11,7 @@ define(function(){
 			const display = document.createElement('div');
 			display.className = 'event-result';
 			eventResultBox.appendChild(display);
-			display.comeIntoView = comeIntoView;
-			display.moveOutOfView = moveOutOfView;
+
 			switch(a.type){
 				case 'expedition':
 					const title = document.createElement('h3');
