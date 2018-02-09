@@ -1,4 +1,4 @@
-define(['core/Square', 'core/Civic', 'events/expedition', 'ui/makeexpeditionuiwindow'], function(Square, Civic, Expedition, MakeExpeditionUIWindow){
+define(['tiles/Square', 'tiles/Civic', 'events/expedition', 'ui/makeexpeditionuiwindow'], function(Square, Civic, Expedition, MakeExpeditionUIWindow){
 	return class Wilds extends Square{
 			constructor(x, y, grid, terrain, growthRate){
 				super(x, y, grid, terrain);
@@ -96,6 +96,7 @@ define(['core/Square', 'core/Civic', 'events/expedition', 'ui/makeexpeditionuiwi
 				this.grid.game.map.addChild(iw);	
 				
 			}
+//this should probably not require knowledge of an outside class?
 
 			convertMe(){
 				let starter = new Civic(

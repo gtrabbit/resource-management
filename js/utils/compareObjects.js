@@ -1,3 +1,5 @@
+//used when updating resources/population totals
+
 define([], function(){
     return function(a, b){
         let results = {};

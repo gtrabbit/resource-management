@@ -27,6 +27,8 @@ define(['core/Grid', 'ui/eventresults', 'events/message'], function(Grid, EventR
 
 		}
 
+		
+
 		makeMap(){
 			let map = new PIXI.Container();
 			map.interactive = true;

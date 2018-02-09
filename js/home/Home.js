@@ -1,4 +1,4 @@
-define(['core/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects', 'utils/cloneObject'], 
+define(['tiles/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects', 'utils/cloneObject'], 
 	function(Civic, homeDisplay, Message, compareObjects, cloneObject){
 
 	return class Home {

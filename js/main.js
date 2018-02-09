@@ -1,7 +1,7 @@
 requirejs.config({
 	baseUrl: 'js'
 })
-
+                     //don't need this?
 requirejs(['core/Game', 'core/Grid', 'libs/pixi.min'],
 
 	function(Game, Grid){

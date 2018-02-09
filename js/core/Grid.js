@@ -1,4 +1,4 @@
-define(['core/Wilds', 'home/Home', 'core/Civic', 'core/Terrain'],
+define(['tiles/Wilds', 'home/Home', 'tiles/Civic', 'core/Terrain'],
 	function(Wilds, Home, Civic, Terrain){
 	return class Grid{
 		constructor(game){
