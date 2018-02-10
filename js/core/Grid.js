@@ -9,8 +9,31 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 			this.game = game;
 			this.squareSize = game.squareSize;
 			this.buildMap();
-			this.homeStart = [~~(this.width/2), ~~(this.height/2)]; //this needs to be a function that finds an open field (eventually)
+			this.homeStart = this.makeAField();
 			this.home = this.makeHome(this.homeStart, this.homeStart.map(a=>a+1));
+		}
+
+
+		makeAField(){
+			let x = ~~(this.width / 2);
+			let y = ~~(this.height / 2);
+			let tile = this.getTile(x, y);
+
+			tile.getNeighbors().forEach(a=>{
+				let b = this.getTile(a[0], a[1])
+				b.terrain = 'field';
+				if (Math.random() > 0.7){
+					b.getNeighbors().forEach(a=>{
+						this.getTile(a[0], a[1]).terrain = 'field';
+					})
+				}
+
+			})
+			return [x, y];
+		}
+
+		getTile(x, y){
+			return this.rows[x][y];
 		}
 
 		//should this be somewhere else? --ideally, home should be able to handle this? like, a Home.init()
@@ -69,7 +92,7 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 					if (a.type === 'civic' && this.isExplored != true){
 						this.isExplored = true;
 					}
-					let square = this.rows[a[0]][a[1]];
+					let square = this.getTile(a[0], a[1]);
 					chance += square.hasOwnProperty('dangerValue') ? square.getDanger() : 1;	
 					})
 				if (tile.terrain === 'hills') chance * 6;
