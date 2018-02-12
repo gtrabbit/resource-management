@@ -11,6 +11,9 @@ define([], function(){
 
 
 		function closeIw(){
+			if (!expedition.confirmed){
+				tile.expedition = {};
+			}
 			iw.parent.removeChild(iw);
 		}
 

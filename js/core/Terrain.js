@@ -39,15 +39,10 @@ define({
 				})
 			})
 		}
-
 		this.checkMap(grid, size)
-		
 	},
 
 
-//TODO: complete this function, telling map to re-generate
-//		if we don't have enough of each tile type... which
-//   	should be a % of total land area.
 	checkMap(grid, size){
 		let environs = {
 						forest: 0,
@@ -64,8 +59,6 @@ define({
 			this.resetAll(grid);
 			this.generateTerrain(grid);
 		}
-
-
 	},
 
 	resetAll(grid){
@@ -84,9 +77,6 @@ define({
 
 
 	firstIteration(grid, size){
-		
-
-
 		let hills = forests = field = 0;
 		grid.map((a, j)=>(
 			a.map((b, k)=>{

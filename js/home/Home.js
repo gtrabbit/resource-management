@@ -1,17 +1,20 @@
-define(['tiles/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects', 'utils/cloneObject'], 
-	function(Civic, homeDisplay, Message, compareObjects, cloneObject){
+define(['tiles/Civic', 'ui/homedisplay', 
+	  'utils/cloneObject', 'home/citizens/artisan',
+	 'home/citizens/commoner', 'home/citizens/farmer', 'home/citizens/militia',
+	 'home/citizens/woodsman',], 
+	function(Civic, homeDisplay, cloneObject,
+			Artisan, Commoner, Farmer, Militia, Woodsman){
 
 	return class Home {
-		constructor(grid, topLeft, botRight, startingResources, startingPopulation){
-			this.territory = [];
+		constructor(grid, startingResources, startingPopulation, popGrowth, territory){
+			this.territory = territory || [];
 			this.resources = startingResources;
 			this.grid = grid;
 			this.game = grid.game
-			this.baseDefense = 10;
+			this.baseDefense = 10;   // calculated property based on buildings / tech / etc. => not state
 			this.population = startingPopulation;
-			this.militiaAvailable = startingPopulation.militia;
-			this.popGrowth = 0;
-			this.caps = {
+			this.population.militiaAvailable = startingPopulation.militia;
+			this.caps = {  // this will be a calculated property, so not part of state...
 				'farmers': 10,
 				'artisans': 5,
 				'woodsmen': 8,
@@ -20,43 +23,35 @@ define(['tiles/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects
 				'commoners': Infinity,
 				'total': 50
 			}
-			this.costs = {
-				farmers: {
-					'silver': -1,
-					'food': 5,
-					'popGrowth': 0.04
-				},
-				militia: {
-					'silver': -2,
-					'food': -2,
-					'popGrowth': 0
-				},
-				artisans: {
-					'food': -2,
-					'silver': 5,
-					'popGrowth': 0.05
-				},
-				commoners: {
-					'food': -1,
-					'popGrowth': 0.1
-				},
-				woodsmen: {
-					'food': -1,
-					'silver': -1,
-					'wood': 5,
-					'popGrowth': 0.02
-				}
+			this.citizens = {
+				artisans: new Artisan(null),
+				commoners: new Commoner(null),
+				farmers: new Farmer(null),
+				militia: new Militia(null),
+				woodsmen: new Woodsman(null)
 			}
+
 			this.display = homeDisplay();
 			this.game.stage.addChild(this.display.container);
 		}
 
+		extractState(){
+			return {
+				population: this.population,
+				territory: this.territory,
+				resources: this.resources				
+			}
+		}
+
 		addResource(typeAmount){
 			Object.keys(typeAmount)
-				.filter(a=>(a !== 'popGrowth'))
 				.forEach(a=>{
-					this.resources[a] += typeAmount[a];
+						this.resources[a] += typeAmount[a];
 				})
+			if (this.popGrowth > 1) {
+				this.popGrowth--;
+				this.modifyPopulace('commoners', 1);
+			}
 			this.updateDisplay();
 		}
 
@@ -72,15 +67,23 @@ define(['tiles/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects
 			return cloneObject(this.population);
 		}
 
-		checkCost(cost){
-			return cost.length === 0 || Object.keys(cost)
-				.filter(a=>(a !== 'popGrowth'))
-				.every(a=>(this.resources[a] >= -cost[a]))
+		extractCost(cost){  //returns false (with no side effects) if all resources are not available
+			let total = {};
+			
+			for (let key in cost){
+				if (this.resources[key] >= cost[key]){
+					if (cost[key] < 0) total[key] = cost[key];
+				} else {
+					return false
+				}
+			}
+			this.addResource(total);
+			return true;
 		}
 
 		disband(citizen){
 			this.population[citizen]--;
-			this.population.commoners++;
+			if (citizen !== 'commoner')	this.population.commoners++;
 			this.updateDisplay();
 		}
 
@@ -100,21 +103,13 @@ define(['tiles/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects
 			}	
 		}
 
-		update(){
+		update(turnNumber){
 			let popDef = 0;
-			let previousResources = this.getAllResources();
-			let previousPopulation = this.getAllPopulation();
-
 			for (let key in this.population){
 				if (key !== 'militiaAvailable'){
 					for (let x = 0; x < this.population[key]; x++) {
-						if (this.checkCost(this.costs[key])) {
-							this.addResource(this.costs[key])
-							this.popGrowth += this.costs[key].popGrowth;
-							if (this.popGrowth > 1) {
-								this.popGrowth--;
-								this.modifyPopulace('commoners', 1);
-							}
+						if (this.extractCost(this.citizens[key].costs)) {
+							this.addResource(this.citizens[key].benefits)
 							popDef += key === 'militia' ? 4 : 0;
 							popDef += key === 'woodsmen' ? 1 : 0;
 						} else {
@@ -126,58 +121,22 @@ define(['tiles/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects
 				}	
 			}
 
-			this.summarizeGrowth([previousResources, previousPopulation], [this.resources, this.population]);
+			this.display.summarizeGrowth([this.getAllResources(), this.getAllPopulation()], [this.resources, this.population])
+				.forEach(a=>this.game.addEvent(a));
 			this.determineLosses(popDef + this.baseDefense);
 		}
-
-
-
-		summarizeGrowth(oldValues, newValues){
-			const resChanges = compareObjects(oldValues[0], newValues[0]);
-			const popChanges = compareObjects(oldValues[1], newValues[1]);
-			const resSummaries = [];
-			const popSummaries = [];
-
-			for (let key in resChanges){
-				if (resChanges[key] !== 0){
-					let verb = resChanges[key] > 0 ? 'gained' : 'lost';
-					resSummaries.push(`You have ${verb} ${Math.abs(resChanges[key])} ${key}.`);
-				}
-			}
-
-			if (resSummaries.length < 1){
-				resSummaries.push('Nothing new to report')
-			}
-			this.game.events.push(new Message('Treasurer\'s Log:', resSummaries));
-
-			for (let key in popChanges){
-				if (popChanges[key] !== 0){
-
-					let verb = popChanges[key] > 0 ? 'gained' : 'lost';
-					let explanation = popChanges[key] > 0 ? '' : 'due to the shortage of resources'
-					popSummaries.push(`The city has ${verb} ${Math.abs(popChanges[key])} ${key} ${explanation}`)
-				}
-			}
-
-			if (popSummaries.length < 1){
-				popSummaries.push('Nothing new to report');
-			}
-			this.game.events.push(new Message('Office of the Census:', popSummaries));
-		}
-
 
 		updateDisplay(){
 			const numbers = {...this.population, ...this.resources};
 			Object.keys(numbers).forEach(a=>{
-				this.display[a].text = this.display[a].text.replace(/\d+/, numbers[a])
+				if (this.display.hasOwnProperty(a))
+					this.display[a].text = this.display[a].text.replace(/\d+/, numbers[a])
 			})
 		}
-
 		
 		determineLosses(def){
 			//need to flesh this out
 			this.findPerimeterDanger(this.territory)
-			
 		}
 
 		findPerimeterDanger(territory){
@@ -190,8 +149,7 @@ define(['tiles/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects
 						surroundingSquares[tile.UID] = tile.getDanger();
 						individualDanger += tile.getDanger();
 						tile.isExplored = true;
-					}
-					
+					}	
 				})
 				a.currentThreat = individualDanger;
 			})
@@ -200,11 +158,7 @@ define(['tiles/Civic', 'ui/homedisplay', 'events/message', 'utils/compareObjects
 				total += surroundingSquares[key];
 			}
 			return total;
-
-
 		}
-
-
 	}
 })
 

@@ -26,6 +26,10 @@ define(['core/Game', 'ui/map/baseTileUI'], function(Game, makeTileUI){
 			
 		}
 
+		getDanger(){
+			return 0;
+		}
+
 		setNeighbors(x, y){
 			let neighbors = [];
 			for (let j = x-1; j <= x+1; j++){

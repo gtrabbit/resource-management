@@ -5,9 +5,12 @@ requirejs.config({
 requirejs(['core/Game', 'core/Grid', 'node_modules/pixi.js/dist/pixi.min.js'],
 
 	function(Game, Grid){
+		const screenHeight = 800;
+		const screenWidth = 900;
+
 		const app = new PIXI.Application(
-			600,
-			600,
+			screenWidth,
+			screenHeight,
 			{backgroundColor: 0x111111})
 		const renderer = app.renderer;
 		app.view.className = "application"
@@ -21,7 +24,21 @@ requirejs(['core/Game', 'core/Grid', 'node_modules/pixi.js/dist/pixi.min.js'],
 			console.log(thisGame)
 		})
 		const animationHook = app.ticker;
-		const thisGame = new Game(5, 35, 35, stage, renderer, animationHook)
+		const isNewGame = true;
+		let state = {};
+
+		if (isNewGame){
+			state = {
+				width: 55,
+				growthRate: 5,
+				height: 55
+			}
+		} else {
+			//xhr to get the game state
+			// then state = {something else...}
+		}
+
+		const thisGame = new Game(state, screenWidth, screenHeight, stage, renderer, animationHook)
 
 		thisGame.setStage();
 		thisGame.update();

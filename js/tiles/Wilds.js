@@ -17,15 +17,29 @@ define(['tiles/Square', 'events/expedition', 'ui/makeexpeditionuiwindow'], funct
 				this.dangerValue = value;
 			}
 
-			takeTurn(){
+			takeTurn(turnNumber){
+				const someKindaDifficultyConstant = 10;
+				if (!this.expedition.confirmed){
+					this.expedition = {};
+				}
+				let chance = 1;
+				let value = 1;
+				this.getNeighbors().forEach((a) => {
+					let square = this.grid.getTile(a[0], a[1]);
+					chance += square.getDanger();	
+					})
+				if (this.terrain === 'hills') chance * 6;
+				if (this.terrain === 'forest') chance * 4;
+				if (chance > (Math.random() * (this.growthRate * 5)) + (someKindaDifficultyConstant - (turnNumber / 10))){
+					this.setDanger(this.getDanger() + value);
+				} 
 				this.render();
 			}
 
 			setListener(){
 				this.ui.on('pointerup', this.showOptions.bind(this));
 			}
-
-						
+		
 			showOptions(){
 				if (!this.expedition.hasOwnProperty('confirmed') && !this.expedition.confirmed){
 					this.expedition = new Expedition(this)
@@ -39,8 +53,6 @@ define(['tiles/Square', 'events/expedition', 'ui/makeexpeditionuiwindow'], funct
 				
 			}
 
-
-//this should probably not require knowledge of an outside class?
 			convertMe(){
 				this.grid.convertTile('civic', this.x, this.y, this.terrain);
 			}

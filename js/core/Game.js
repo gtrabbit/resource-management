@@ -1,20 +1,19 @@
 define(['core/Grid', 'ui/eventresults', 'events/message', 'ui/map/Map', 'ui/infowindow', 'ui/maketextbox',
-		'ui/setupeventsbox'], function(Grid, EventResults, Message, Map, InfoWindow, makeTextBox, SetupEventsBox){
+		'ui/setupeventsbox'], function(Grid, EventResults, Message, MapUI, InfoWindow, makeTextBox, SetupEventsBox){
 	
 
 	return class Game{
-		constructor(growthRate, width, height, stage, renderer, animationHook){
-			this.growthRate = growthRate;
-			this.width = width;
-			this.height = height;
+		constructor(state, screenWidth, screenHeight, stage, renderer, animationHook){
+
+			//=========PIXI essentials===========//
 			this.stage = stage;
-			this.squareSize = 32;
-			this.map = Map(width, height, this.squareSize);
 			this.renderer = renderer;
-			this.turns = 0;
-			this.grid = new Grid(this);
-			this.events = [];
-			this.eventArchive = {};
+			this.animationHook = animationHook;
+			this.screenWidth = screenWidth;
+			this.screenHeight = screenHeight;
+
+			//===========Constants============//
+
 			this.basicFontStyle = {
 				fontFamily: 'Georgia',
 				fontSize: '10pt',
@@ -22,25 +21,50 @@ define(['core/Grid', 'ui/eventresults', 'events/message', 'ui/map/Map', 'ui/info
 				wordWrapWidth: 230,
 				padding: 10
 			}  //just for now. something better later for sure
-			this.infoWindow = InfoWindow();
 			this.welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
-			this.eventsDisplay = SetupEventsBox(this.events, this.welcomeMessage);
+			this.squareSize = 32;
+
+			this.map = MapUI(state.width, state.height, this.squareSize, screenWidth, screenHeight);  //== doesn't belong here, but has to happen before the grid...
+
+			this.state = {
+				growthRate: state.growthRate,
+				width: state.width,
+				height: state.height,
+				turns: state.turns || 0,
+				events: state.events || [],
+				eventArchive: state.eventArchive || {}
+			}
+
+// we extractState() from grid, so this is not techincally part of state, since grid has logic and the state should only be data
+			this.grid = !state.grid ? new Grid(this) : new Grid(this, state.grid);
+			
+			//============Logic/Function============///
+			this.eventsDisplay = SetupEventsBox(this.state.events, this.welcomeMessage);
 			this.makeTextBox = makeTextBox;
-			this.animationHook = animationHook;
+			this.infoWindow = InfoWindow();
 		}
 
+		//methods...
+
+		extractState(){
+			return {
+				gameState: this.state,
+				gridState: this.grid.extractState()
+			}
+		}
 
 		showEventResults(results){
-			this.eventArchive[this.turns] = this.events.splice(0, this.events.length).map(a=>a.resolve());
-			EventResults(this.eventArchive[this.turns], this.turns);
+			this.state.eventArchive[this.state.turns] = this.state.events.splice(0, this.state.events.length).map(a=>a.resolve());
+			EventResults(this.state.eventArchive[this.state.turns], this.state.turns);
 		}
 
-		update(){
-			this.map.removeChild(this.infoWindow);
-			this.turns++;
-			this.showEventResults();
-			this.grid.home.update();
-			this.grid.update();
+		addEvent(event){
+			this.state.events.push(event);
+		}
+
+		removeEvent(eventId){
+			this.state.events.splice(
+				this.state.events.findIndex(a => a.eventId === eventId), 1);
 		}
 
 		setStage(){
@@ -52,13 +76,21 @@ define(['core/Grid', 'ui/eventresults', 'events/message', 'ui/map/Map', 'ui/info
 			})
 			this.stage.addChildAt(this.map, 0);
 		}
-	}
 
+		update(){
+			this.map.removeChild(this.infoWindow);
+			this.state.turns++;
+			this.showEventResults();
+			this.grid.home.update(this.state.turns);
+			this.grid.update(this.state.turns);
+		}
+	}
 })
 
 
 	
 // eventArchive = {
+//	record: {eventID: timesTriggered, eventID: timesTriggered, eventID: timesTriggered...},
 // 	day: [
 // 		events, events, events
 // 	],

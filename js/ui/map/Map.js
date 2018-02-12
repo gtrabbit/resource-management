@@ -1,10 +1,13 @@
 define([], function(){
 
-    return function map(width, height, squareSize){
+    return function map(width, height, squareSize, screenWidth, screenHeight){
         const map = new PIXI.Container();
         map.interactive = true;
         map.x = width * (squareSize / 2) + 20;
         map.y = height * (squareSize / 2) + 20;
+        const lowerRightX = (width * squareSize / 2);
+        const lowerRightY = (height * squareSize / 2);
+
         map.pivot.set(width * (squareSize / 2) + 20, height * (squareSize / 2) + 20)
         map
             .on('pointerdown', onDragStart)
@@ -30,12 +33,15 @@ define([], function(){
                 let newPosition = this.data.getLocalPosition(this.parent);
                 let xBound = newPosition.x - this.pivot.x;
                 let yBound = newPosition.y - this.pivot.y;
-                if (xBound < 100 && xBound > -600 && yBound < 100 && yBound > -600) {
-                    this.x = newPosition.x;
-                    this.y = newPosition.y;
-                }
+                if (xBound < 100 && xBound > -(lowerRightX + 200)) this.x = newPosition.x;
+                if (yBound < 100 && yBound > -(lowerRightY + 200)) this.y = newPosition.y;
             }
         }
+
+        map.zoomToLocation = function(coords){
+            this.pivot.set((coords[0] * squareSize) * 1.6, 1.6 * (coords[1] * squareSize));
+        }
+
         return map;
     }
     

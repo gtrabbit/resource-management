@@ -25,7 +25,6 @@ define(['ui/eventIndicator'], function(makeEventIndicator){
 			}
 		}
 
-
 		calcWinPercentage(militia) {
 			let baseDV = this.dangerValue;
 			let DVrange = [baseDV * 4, (baseDV * 6) - 1];
@@ -40,7 +39,6 @@ define(['ui/eventIndicator'], function(makeEventIndicator){
 				return Math.min((chances / range).toFixed(2), 1);
 			}
 		}
-
 
 		adjustMilitia(value, messageContainer, mAvail, mCom, winProbMsg) {
 			this.militia += value;
@@ -63,7 +61,7 @@ define(['ui/eventIndicator'], function(makeEventIndicator){
 		confirmExpedition() {
 			if (this.isValid()) {
 				this.tile.grid.home.modifyPopulace('militiaAvailable', -this.militia);
-				this.tile.grid.game.events.push(this);
+				this.tile.grid.game.addEvent(this);
 				this.confirmed = true;
 				this.tile.showOptions();
 				this.indicator = makeEventIndicator('expedition', this.tile);
@@ -76,12 +74,10 @@ define(['ui/eventIndicator'], function(makeEventIndicator){
 
 		cancelExpedition() {
 			this.tile.grid.home.modifyPopulace('militiaAvailable', this.militia);
-			this.tile.grid.game.events.splice(
-				this.tile.grid.game.events.findIndex(a => a.eventId === this.eventId), 1);
+			this.tile.grid.game.removeEvent(this.eventId);
 			this.confirmed = false;
 			this.tile.ui.removeChild(this.indicator);
 		}
-
 
 
 		calcWinPercentage(){
@@ -110,7 +106,6 @@ define(['ui/eventIndicator'], function(makeEventIndicator){
 			this.tile.ui.removeChild(this.indicator);
 			return results;
 		}
-
 	}
 })
 

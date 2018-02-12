@@ -3,3 +3,18 @@ Need to move on toward enabling the upgrading of citizens
 constructing buildings
 
 daily/random events
+
+can add a concept of time-- events taking X number of turns to complete-- expeditions, buildings, etc?
+
+Consider migrating to an actual build system (webpack/babel w/ Grunt?) -- thus, an npm background, which will need to come eventually anyway if we're going to have persistence
+
+Build UI components --- I suppose I should wait on Barry before I bother with that, though? yes. everything can look like crap for now.
+                        but down the road, I should definitely abstract UI into reusable/atomic classes
+
+
+    ============= Saving ============
+
+-- want to minimize the amount of data needed to regenerate the exact game state.
+-- need not pass any logic
+
+-- if we want to consider saving a possibility, then we will need the game object to be able to track which events have triggered / how many times.
