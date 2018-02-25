@@ -1,9 +1,9 @@
 define(['tiles/Civic', 'ui/home/resAndPopDisplay', 
 	  'utils/cloneObject', 'utils/compareObjects', 'home/citizens/artisan',
 	 'home/citizens/commoner', 'home/citizens/farmer', 'home/citizens/militia',
-	 'home/citizens/woodsman', 'events/citizenConversion'], 
+	 'home/citizens/woodsman', 'events/citizenConversion', 'ui/home/citizenManagementDisplay'], 
 	function(Civic, homeDisplay, cloneObject, compareObjects,
-			Artisan, Commoner, Farmer, Militia, Woodsman, citizenConversion){
+			Artisan, Commoner, Farmer, Militia, Woodsman, citizenConversion, citizenManager){
 
 	return class Home {
 		constructor(grid, startingResources, startingPopulation, popGrowth, territory){
@@ -31,7 +31,8 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 				woodsmen: new Woodsman(null)
 			}
 			this.display = homeDisplay();
-			this.game.stage.addChild(this.display.container);
+			this.citizenManager = citizenManager(this.game.screenWidth, this.game.screenHeight, this.convertCitizen.bind(this), this.disband.bind(this));
+			this.game.stage.addChild(this.display.container, this.citizenManager);
 		}
 
 		extractState(){
@@ -47,11 +48,11 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 				.forEach(a=>{
 						this.resources[a] += typeAmount[a];
 				})
-			if (this.popGrowth > 1) {
-				this.popGrowth--;
+			if (this.resources.popGrowth > 1) {
+				this.resources.popGrowth--;
 				this.modifyPopulace('commoners', 1);
 			}
-			this.updateDisplay();
+			// this.updateDisplay();  --not necessary to do this here
 		}
 
 		getResources(type){
@@ -82,15 +83,15 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 
 		disband(citizen){
 			this.population[citizen]--;
-			if (citizen !== 'commoner')	this.population.commoners++;
+			if (citizen !== 'commoners')	this.population.commoners++;
 			this.updateDisplay();
 		}
 
-		convertCitizen(fromType, targetType){
-
-			if (canConvertCitizenTo(targetType, 1)){
-				this.modifyPopulace(fromType, -1);
-				this.addEvent(citizenConversion(fromType, targetType, this.modifyPopulace));
+		convertCitizen(fromType, targetType, givenAmount){
+			const amount = givenAmount || 1;
+			if (this.canConvertCitizenTo(targetType, amount)){
+				this.modifyPopulace(fromType, -amount);
+				this.game.addEvent(citizenConversion(this.citizens[fromType], this.citizens[targetType], this.modifyPopulace.bind(this), amount));
 				this.updateDisplay();
 			} else {
 				console.log("hey. can't do that. Sorry")
@@ -99,7 +100,8 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 
 		canConvertCitizenTo(type, amount){
 			return this.caps[type] >= this.population[type] + amount
-				&& this.caps.total >= this.getTotalPopulation() + amount - this.population.militia; 
+				&& this.caps.total >= this.getTotalPopulation() + amount - this.population.militia
+				&& this.population['commoners'] > 1; 
 		}
 
 		getTotalPopulation(){
@@ -110,6 +112,9 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 		modifyPopulace(type, amount){
 			if (this.canConvertCitizenTo){
 				this.population[type] += amount;
+				if (type === 'militia') {
+					this.population.militiaAvailable += amount;
+				}
 				this.updateDisplay();
 				return true;
 			} else {
@@ -140,6 +145,7 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 			this.display.summarizeGrowth(compareObjects(oldResources, this.resources), compareObjects(oldPopulation, this.population))
 				.forEach(a=>this.game.addEvent(a));
 			this.determineLosses(popDef + this.baseDefense);
+			this.updateDisplay();
 		}
 
 		updateDisplay(){ //This updating needs to be handled by the display itself-- this class should not require knowledge of how the display is handled

@@ -90,9 +90,9 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 		update(){
 			this.map.removeChild(this.infoWindow);
 			this.state.turns++;
-			this.showEventResults();
 			this.grid.home.update(this.state.turns);
 			this.grid.update(this.state.turns);
+			this.showEventResults();
 		}
 	}
 })

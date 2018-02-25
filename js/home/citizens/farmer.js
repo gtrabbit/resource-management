@@ -1,7 +1,7 @@
 define([], function(){
     return class Farmer {
         constructor(level){
-            this.type = 'farmer';
+            this.type = 'farmers';
             this.costs = {
                 'silver': -1,
                 'food': 0,
