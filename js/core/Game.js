@@ -97,14 +97,3 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 	}
 })
 
-
-	
-// eventArchive = {
-//	record: {eventID: timesTriggered, eventID: timesTriggered, eventID: timesTriggered...},
-// 	day: [
-// 		events, events, events
-// 	],
-// 	day: [
-// 		events, events, events
-// 	]
-// }
