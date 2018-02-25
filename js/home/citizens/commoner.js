@@ -1,6 +1,7 @@
 define([], function(){
     return class Commoner {
         constructor(level){
+            this.type = 'commoner';
             this.costs = {
                 'food': -1,
                 'wood': 0,
@@ -14,6 +15,8 @@ define([], function(){
                 'silver': 0,
                 
             }
+
+            this.trainingTime = 0;
         }
     }
 })

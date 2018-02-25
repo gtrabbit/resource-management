@@ -1,4 +1,4 @@
-define(['tiles/Square', 'events/expedition', 'ui/makeexpeditionuiwindow'], function(Square, Expedition, MakeExpeditionUIWindow){
+define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow'], function(Square, Expedition, MakeExpeditionUIWindow){
 	return class Wilds extends Square{
 			constructor(x, y, grid, terrain, growthRate){
 				super(x, y, grid, terrain);

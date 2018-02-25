@@ -70,11 +70,9 @@ define({
 		})
 	},
 
-
 	resetTile(tile){
 		tile.terrain = 'field'
 	},
-
 
 	firstIteration(grid, size){
 		let hills = forests = field = 0;
@@ -93,6 +91,4 @@ define({
 			})))
 		return grid;
 	},
-
-	
 })

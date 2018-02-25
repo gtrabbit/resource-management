@@ -1,3 +1,5 @@
+//this is really ugly...
+
 define([], function(){
 	return function MakeExpeditionUIWindow(iw, expedition, style, tile) {
 		const messageContainer = new PIXI.Container();
@@ -24,7 +26,7 @@ define([], function(){
 		messageContainer.addChild(dvMsg);
 
 		const militiaCommited = new PIXI.Text("Militia Commited: " + expedition.militia, style);
-		const milMsg = new PIXI.Text('Militia Available: ' + expedition.militiaAvailable, style);
+		const militiaAvailableMsg = new PIXI.Text('Militia Available: ' + expedition.militiaAvailable, style);
 
 		if (expedition.confirmed){
 			const canceler = new PIXI.Text('Cancel Expedition?', style)
@@ -42,7 +44,8 @@ define([], function(){
 
 		} else {
 			const winPropMsg = new PIXI.Text("you must send at least one militia...", style);
-			const q = 'How many militia will you commit to this expedition?';
+			const durationMsg = new PIXI.Text('', style);
+			const question = 'How many militia will you commit to this expedition?';
 			const increase = new PIXI.Text('more', style);
 			const decrease = new PIXI.Text('less', style);
 			const adBox = new PIXI.Container();
@@ -51,23 +54,34 @@ define([], function(){
 			decrease.interactive = true;
 			increase.buttonMode = true;
 			decrease.buttonMode = true;
+			
+			const adjustMilitiaDisplay = function(amount){
+				militiaCommited.text = "Militia Commited: " + (expedition.militia + amount);
+				militiaAvailableMsg.text = 'Militia Available: ' + (expedition.militiaAvailable - amount);
+			}
+
+			const updateWinChance = function(winChance){
+				winPropMsg.text = winChance === null ? "You must send at least one militia" : "Hope of Victory: " + (winChance * 100) + "%";			
+			}
+
 			increase.on('click', ()=>{
-	
 				if (expedition.militiaAvailable > 0){
-					expedition.adjustMilitia(1, messageContainer, milMsg, militiaCommited, winPropMsg)
+					adjustMilitiaDisplay(1);
+					updateWinChance(expedition.adjustMilitia(1));					
 				}
 				
 			});
 			decrease.on('click', ()=>{
 				if (expedition.militia > 0){
-					expedition.adjustMilitia(-1, messageContainer, milMsg, militiaCommited, winPropMsg)
+					adjustMilitiaDisplay(-1);
+					updateWinChance(expedition.adjustMilitia(-1));
 				}
 			});
 
 			increase.x = 40;
 			decrease.x = 0;
 			
-			const qMsg = new PIXI.Text(q, style);					
+			const questionMsg = new PIXI.Text(question, style);					
 
 			const confirmation = new PIXI.Text('Confirm Expedition', style)
 			confirmation.interactive = true;
@@ -77,18 +91,20 @@ define([], function(){
 			})
 
 			messageContainer.addChild(
-				qMsg, militiaCommited, milMsg,
-				adBox, winPropMsg, confirmation)
+				questionMsg, militiaCommited, militiaAvailableMsg,
+				adBox, winPropMsg, durationMsg, confirmation)
 
-			qMsg.position.set(0, 20);
-			milMsg.position.set(0, 80);
+			questionMsg.position.set(0, 20);
+			militiaAvailableMsg.position.set(0, 80);
 			militiaCommited.position.set(0, 60);
-			adBox.position.set(0, 100)
-			winPropMsg.position.set(20, 120)
-			confirmation.position.set(20, 160)
+			adBox.position.set(0, 100);
+			winPropMsg.position.set(20, 120);
+			durationMsg.position.set(20, 140);
+			confirmation.position.set(20, 170);
 			}
 
-			return messageContainer;
+			return messageContainer
+	
 		}
 	
 })

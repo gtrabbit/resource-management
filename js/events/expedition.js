@@ -1,4 +1,4 @@
-define(['ui/eventIndicator'], function(makeEventIndicator){
+define(['ui/events/eventIndicator', 'events/Timer'], function(makeEventIndicator, Timer){
 	return class Expedition {
 		constructor(tile){
 			this.type = 'expedition';
@@ -8,6 +8,8 @@ define(['ui/eventIndicator'], function(makeEventIndicator){
 			this.dangerValue = tile.getDanger() || 0;
 			this.confirmed = false;
 			this.tile = tile;
+			const waitPeriod = Math.ceil(this.dangerValue / 2);
+			this.timer = new Timer('event', waitPeriod);
 		}
 
 		isValid(){
@@ -40,22 +42,10 @@ define(['ui/eventIndicator'], function(makeEventIndicator){
 			}
 		}
 
-		adjustMilitia(value, messageContainer, mAvail, mCom, winProbMsg) {
+		adjustMilitia(value) {
 			this.militia += value;
 			this.militiaAvailable -= value;
-			messageContainer.children[messageContainer.getChildIndex(mCom)]
-				.text = "Militia Commited: " + this.militia;
-			messageContainer.children[messageContainer.getChildIndex(mAvail)]
-				.text = 'Militia Available: ' + this.militiaAvailable;
-
-			if (this.militia) {
-				let winChance = this.calcWinPercentage(this.militia);
-				messageContainer.children[messageContainer.getChildIndex(winProbMsg)]
-					.text = "Hope of Victory: " + (winChance * 100) + "%";
-			} else {
-				messageContainer.children[messageContainer.getChildIndex(winProbMsg)]
-					.text = "You must send at least one militia"
-			}
+			return this.militia ? this.calcWinPercentage(this.militia) : null;
 		}
 
 		confirmExpedition() {
@@ -101,6 +91,7 @@ define(['ui/eventIndicator'], function(makeEventIndicator){
 				this.tile.convertMe();
 			}
 			this.tile.grid.home.modifyPopulace('militia', -results.deaths);
+			this.tile.grid.home.modifyPopulace('militiaAvailable', this.militia - results.deaths);
 			this.tile.expedition = {};
 			this.tile.setListener();
 			this.tile.ui.removeChild(this.indicator);

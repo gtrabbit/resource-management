@@ -1,6 +1,7 @@
 define([], function(){
     return class Artisan {
         constructor(level){
+            this.type = 'artisan';
             this.costs = {
                 'food': -2,
                 'silver': 0,
@@ -13,6 +14,8 @@ define([], function(){
                 'food': 0,
                 'wood': 0
             }
+
+            this.trainingTime = 4;
         }
     }
 })

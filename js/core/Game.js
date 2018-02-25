@@ -1,5 +1,5 @@
-define(['core/Grid', 'ui/eventresults', 'events/message', 'ui/map/Map', 'ui/infowindow', 'ui/maketextbox',
-		'ui/setupeventsbox'], function(Grid, EventResults, Message, MapUI, InfoWindow, makeTextBox, SetupEventsBox){
+define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', 'ui/infowindow', 'ui/maketextbox',
+		'ui/events/setupeventsbox'], function(Grid, EventResults, Message, MapUI, InfoWindow, makeTextBox, SetupEventsBox){
 	
 
 	return class Game{
@@ -32,7 +32,8 @@ define(['core/Grid', 'ui/eventresults', 'events/message', 'ui/map/Map', 'ui/info
 				height: state.height,
 				turns: state.turns || 0,
 				events: state.events || [],
-				eventArchive: state.eventArchive || {}
+				eventArchive: state.eventArchive || {},
+				upcomingEvents: state.upcomingEvents || []
 			}
 
 // we extractState() from grid, so this is not techincally part of state, since grid has logic and the state should only be data
@@ -53,8 +54,17 @@ define(['core/Grid', 'ui/eventresults', 'events/message', 'ui/map/Map', 'ui/info
 			}
 		}
 
-		showEventResults(results){
-			this.state.eventArchive[this.state.turns] = this.state.events.splice(0, this.state.events.length).map(a=>a.resolve());
+		showEventResults(){
+			const completedEvents = [];
+			for (let i = 0; i < this.state.events.length; i++) {
+				let event = this.state.events[i];
+				if (event.timer.modifyDuration() < 0){
+					completedEvents.push(this.state.events.splice(i, 1)[0].resolve());
+					i--;
+				}
+			}
+			console.log(completedEvents);
+			this.state.eventArchive[this.state.turns] = completedEvents;
 			EventResults(this.state.eventArchive[this.state.turns], this.state.turns);
 		}
 

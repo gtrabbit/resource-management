@@ -1,4 +1,4 @@
-define(['utils/compareObjects', 'events/message'], function(compareObjects, Message){
+define(['events/message'], function(Message){
 	return function(){
 
 		const style = new PIXI.TextStyle({
@@ -35,16 +35,14 @@ define(['utils/compareObjects', 'events/message'], function(compareObjects, Mess
 		container.addChild(backing, militia, militiaAvailable, farmers, artisans,
 			woodsmen, commoners, silver, wood, food);
 		
-		let size = container.getBounds();
+		let size = container.getBounds(); //probably not necessary-- can just get static dimensions (eventually)
 		
 		backing.beginFill(0x000000);
 		backing.drawRect(0,0, 600, size.height+10);
 		backing.endFill();
 
 
-		function summarizeGrowth(oldValues, newValues){
-			const resChanges = compareObjects(oldValues[0], newValues[0]);
-			const popChanges = compareObjects(oldValues[1], newValues[1]);
+		function summarizeGrowth(resChanges, popChanges){
 			const resSummaries = [];
 			const popSummaries = [];
 
