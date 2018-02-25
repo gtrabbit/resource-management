@@ -96,4 +96,3 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 		}
 	}
 })
-
