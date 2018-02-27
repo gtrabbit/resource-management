@@ -1,7 +1,7 @@
 //this is really ugly...
 
 define([], function(){
-	return function MakeExpeditionUIWindow(iw, expedition, style, tile) {
+	return function MakeExpeditionUIWindow(iw, expedition, style, tile, map) {
 		const messageContainer = new PIXI.Container();
 		const closer = new PIXI.Text('X', style);
 		closer.interactive = true;
@@ -10,7 +10,7 @@ define([], function(){
 			closeIw();
 		})
 
-
+		map.zoomToLocation([tile.x, tile.y]);
 
 		function closeIw(){
 			if (!expedition.confirmed){

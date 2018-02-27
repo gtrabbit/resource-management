@@ -23,7 +23,6 @@ define(['core/Game', 'ui/map/baseTileUI'], function(Game, makeTileUI){
 		}
 
 		setListener(){
-			
 		}
 
 		getDanger(){
