@@ -33,8 +33,9 @@ define([], function(){
                 let newPosition = this.data.getLocalPosition(this.parent);
                 let xBound = newPosition.x - this.pivot.x;
                 let yBound = newPosition.y - this.pivot.y;
-                if (xBound < 100 && xBound > -(lowerRightX + 200)) this.x = newPosition.x;
-                if (yBound < 100 && yBound > -(lowerRightY + 200)) this.y = newPosition.y;
+                //TODO: recalculate these limits for the new diagonal layout
+                /*if (xBound < 100 && xBound > -(lowerRightX + 200)) */this.x = newPosition.x;
+                /*if (yBound < 100 && yBound > -(lowerRightY + 200))*/ this.y = newPosition.y;
             }
         }
 
