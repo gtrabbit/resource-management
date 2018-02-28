@@ -25,10 +25,9 @@ define([], function(){
 
 
         ui.endFill();
-        ui.x = ((tile.x * width) / 2) - (tile.y * width/2);
-        ui.y = (((tile.y) * (height)) + (tile.x * height))/2;
-        
-
+        ui.x = ((tile.x * width)  - (tile.y * width))/2;
+        ui.y = ((tile.y * height) + (tile.x * height))/2;
+   
         let dot = new PIXI.Graphics();
         dot.beginFill(0xFF0000);
 
