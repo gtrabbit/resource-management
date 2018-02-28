@@ -80,7 +80,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			this.grid.rows.forEach((a,j)=>{
 				a.forEach((b,k)=>{
 					b.makeUI();
-					this.map.addChild(b.ui);
+					this.map.addChildAt(b.ui, 0);
 				})
 			})
 			this.stage.addChildAt(this.map, 0);
