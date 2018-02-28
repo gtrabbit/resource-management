@@ -7,6 +7,7 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 				this.type = "wilds";
 				this.expedition = {};
 				this.iw = this.grid.game.infoWindow;
+				this.map = this.grid.game.map;
 			}
 
 			getDanger(){
@@ -46,7 +47,7 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 				}
 				const iw = this.grid.game.infoWindow;
 				this.grid.game.map.removeChild(iw);
-				const exuiw = MakeExpeditionUIWindow(iw, this.expedition, this.grid.game.basicFontStyle, this);
+				const exuiw = MakeExpeditionUIWindow(iw, this.expedition, this.grid.game.basicFontStyle, this, this.map);
 				iw.position.set(this.ui.x+this.squareSize+10, this.ui.y);
 				this.grid.game.makeTextBox(iw, exuiw);
 				this.grid.game.map.addChild(iw);	

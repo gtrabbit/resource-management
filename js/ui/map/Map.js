@@ -3,12 +3,7 @@ define([], function(){
     return function map(width, height, squareSize, screenWidth, screenHeight){
         const map = new PIXI.Container();
         map.interactive = true;
-        map.x = width * (squareSize / 2) + 20;
-        map.y = height * (squareSize / 2) + 20;
-        const lowerRightX = (width * squareSize / 2);
-        const lowerRightY = (height * squareSize / 2);
 
-        map.pivot.set(width * (squareSize / 2) + 20, height * (squareSize / 2) + 20)
         map
             .on('pointerdown', onDragStart)
             .on('pointerup', onDragEnd)
@@ -33,6 +28,8 @@ define([], function(){
                 let newPosition = this.data.getLocalPosition(this.parent);
                 let xBound = newPosition.x - this.pivot.x;
                 let yBound = newPosition.y - this.pivot.y;
+
+                
                 //TODO: recalculate these limits for the new diagonal layout
                 /*if (xBound < 100 && xBound > -(lowerRightX + 200)) */this.x = newPosition.x;
                 /*if (yBound < 100 && yBound > -(lowerRightY + 200))*/ this.y = newPosition.y;
@@ -40,7 +37,10 @@ define([], function(){
         }
 
         map.zoomToLocation = function(coords){
-            this.pivot.set((coords[0] * squareSize) * 1.6, 1.6 * (coords[1] * squareSize));
+            const x = (((coords[0] * -squareSize) + (coords[1] * squareSize) + screenWidth) / 2) + this.pivot.x;
+            const y = (((coords[0] / 2) * -(squareSize * 0.618)) + ((coords[1] / 2) * -(squareSize * 0.618)) / 2) + this.pivot.y;
+
+            this.position.set(x , y);
         }
 
         return map;
