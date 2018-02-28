@@ -22,7 +22,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 				padding: 10
 			}  //just for now. something better later for sure
 			this.welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
-			this.squareSize = 40;
+			this.squareSize = 80;
 
 			this.map = MapUI(state.width, state.height, this.squareSize, screenWidth, screenHeight);  //== doesn't belong here, but has to happen before the grid...
 
