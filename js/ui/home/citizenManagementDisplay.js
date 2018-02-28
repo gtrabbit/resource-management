@@ -65,7 +65,6 @@ define([], function(){
         backing.drawRect(screenWidth - 80, 0, 80, screenHeight / 2);
         backing.endFill();
     
-        console.log(container)
         return container;
     }
 })

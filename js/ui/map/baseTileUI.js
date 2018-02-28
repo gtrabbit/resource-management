@@ -1,30 +1,33 @@
-define([], function(){
+define([], function(hillsPNG, fieldPNG, forestPNG){
+
+
     return function(tile){
 
-        let ui = new PIXI.Graphics();
-
-        switch (tile.terrain) {
-            case 'field':
-                ui.beginFill(0xbab521); //yellowish
-                break;
-
-            case 'forest':
-                ui.beginFill(0x196817); //greenish
-                break;
-
-            case 'hills':
-                ui.beginFill(0x72613d);  //brown-grey
-                break;
-        }
-
+        const hills = new PIXI.Texture.fromImage('./assets/tinyhills.png');
+        const field = new PIXI.Texture.fromImage('./assets/tinyplains.png');
+        const forest = new PIXI.Texture.fromImage('./assets/tinytrees.png');
+ 
         const width = tile.squareSize;
         const height = tile.squareSize * (1 / 1.618); //practical use of the golden mean
 
-        ui.lineStyle(1, 0x000, 1);
-        ui.drawPolygon(0,height/2, width/2,0, width,height/2, width/2,height);
+        let uiTexture;
 
+        switch (tile.terrain) {
+            case 'field':
+                uiTexture = field; //yellowish
+                break;
 
-        ui.endFill();
+            case 'forest':
+                uiTexture = forest; //greenish
+                break;
+
+            case 'hills':
+                uiTexture = hills;  //brown-grey
+                break;
+        }
+
+        let ui = new PIXI.extras.TilingSprite(uiTexture, width, height);
+        ui.scale = 2;
         ui.x = ((tile.x * width)  - (tile.y * width))/2;
         ui.y = ((tile.y * height) + (tile.x * height))/2;
    

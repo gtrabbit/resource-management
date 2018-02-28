@@ -63,7 +63,6 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 					i--;
 				}
 			}
-			console.log(completedEvents);
 			this.state.eventArchive[this.state.turns] = completedEvents;
 			EventResults(this.state.eventArchive[this.state.turns], this.state.turns);
 		}
