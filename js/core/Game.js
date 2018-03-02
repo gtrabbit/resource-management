@@ -77,12 +77,20 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 		}
 
 		setStage(){
-			this.grid.rows.forEach((a,j)=>{
-				a.forEach((b,k)=>{
-					b.makeUI();
-					this.map.addChildAt(b.ui, 0);
-				})
-			})
+			for (let rowNumber = this.grid.rows.length-1; rowNumber >= 0; rowNumber--){
+				for (let colNum = this.grid.rows[rowNumber].length-1; colNum >= 0; colNum--){
+					this.grid.rows[rowNumber][colNum].makeUI();
+					this.map.addChild(this.grid.rows[rowNumber][colNum].ui);
+				}
+			}
+
+
+			// this.grid.rows.forEach((a,j)=>{
+			// 	a.forEach((b,k)=>{
+			// 		b.makeUI();
+			// 		this.map.addChildAt(b.ui, 0);
+			// 	})
+			// })
 			this.stage.addChildAt(this.map, 0);
 		}
 

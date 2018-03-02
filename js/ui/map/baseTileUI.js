@@ -28,15 +28,19 @@ define([], function(){
                 break;
         }
 
-        let ui = new PIXI.Sprite(uiTexture);
-        ui.height = height * 2;
-        ui.width = width * 2;
+        let ui = new PIXI.Container();
+
+        let sprite = new PIXI.Sprite(uiTexture);
+        ui.addChild(sprite);
+        ui.height = height;
+        ui.width = width;
    
 
 
         ui.x = ((tile.x * width)  - (tile.y * width)) / 1.5;
         ui.y = ((tile.y * height) + (tile.x * height)) / 1.5;
 
+    
         let dot = new PIXI.Graphics();
         dot.beginFill(0xFF0000);
 

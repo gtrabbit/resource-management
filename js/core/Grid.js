@@ -56,19 +56,11 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 
 		//should this be somewhere else? --ideally, home should be able to handle this? like, a Home.init()
 		makeHome(homeStart, homeEnd){
-			let home = new Home(this, 
+			return new Home(this, 
 			{'food': 20, 'wood': 10, 'silver': 50, 'popGrowth': 0}, // pass in starting resource values based on difficulty at some point
-			{ 'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1 }); // pass in starting resource values based on difficulty at some point
-			for (let x = homeStart[0]; x <= homeEnd[0]; x++){
-				for (let y = homeStart[1]; y <= homeEnd[1]; y++){
-					let starter = TileFactory(
-						'civic', x, y, this, this.rows[x][y].terrain)					
-					this.replaceTile(x, y, starter)
-					home.territory.push(starter);
-				}
-			}
-			home.territory[0].build('farm');
-			return home;
+			{ 'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1 },
+			null, null, homeStart, homeEnd); // pass in starting resource values based on difficulty at some point
+		
 		}
 
 
@@ -107,6 +99,7 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 			Terrain.generateTerrain(this.rows);
 			this.homeStart = this.makeAField();
 			this.home = this.makeHome(this.homeStart, this.homeStart.map(a=>a+1));
+			this.home.setInitialBuildings();
 		}
 	}
 })

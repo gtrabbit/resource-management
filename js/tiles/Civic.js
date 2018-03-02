@@ -8,8 +8,9 @@ define(['tiles/Square'], function(Square){
 			this.isExplored = true;
 		}
 
-		build(structure){
-			this.usage = structure;
+		build(building){
+			this.usage = building;
+			this.grid.home.buildings.constructBuilding(building, this)
 		}
 
 		takeTurn(){
@@ -21,7 +22,7 @@ define(['tiles/Square'], function(Square){
 		}
 
 		render(){
-			this.ui.alpha = 1;
+			this.ui.tint = 0xFFFFFF;
 		}
 
 		setListener(){

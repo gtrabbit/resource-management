@@ -39,6 +39,15 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 
 			setListener(){
 				this.ui.on('pointerup', this.showOptions.bind(this));
+				
+
+				this.ui.on('mouseover', ()=> {
+					this.ui.tint = 0xAAAAFF;
+				});
+				this.ui.on('mouseout', () => {
+					this.ui.tint = 0xFFFFFF;
+				});
+
 			}
 		
 			showOptions(){
@@ -58,11 +67,11 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 				this.grid.convertTile('civic', this.x, this.y, this.terrain);
 			}
 
-			render(){
+			render(){ //this logic should be passed to the actual ui object, and not handled here
 				if (!this.isExplored){
-					this.ui.alpha = 0.2
+					this.ui.tint = 0x333333;
 				} else {
-					this.ui.alpha = 0.5;
+					this.ui.tint = 0xAAAAAA;
 					this.ui.interactive = true;
 					this.ui.buttonMode = true;
 				}

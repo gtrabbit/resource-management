@@ -1,12 +1,14 @@
 define(['tiles/Civic', 'ui/home/resAndPopDisplay', 
 	  'utils/cloneObject', 'utils/compareObjects', 'home/citizens/artisan',
 	 'home/citizens/commoner', 'home/citizens/farmer', 'home/citizens/militia',
-	 'home/citizens/woodsman', 'events/citizenConversion', 'ui/home/citizenManagementDisplay'], 
+	 'home/citizens/woodsman', 'events/citizenConversion', 'ui/home/citizenManagementDisplay',
+	 'home/buildings/buildingManager', 'tiles/tileFactory'], 
 	function(Civic, homeDisplay, cloneObject, compareObjects,
-			Artisan, Commoner, Farmer, Militia, Woodsman, citizenConversion, citizenManager){
+			Artisan, Commoner, Farmer, Militia, Woodsman, citizenConversion,
+			citizenManager, BuildingManager, TileFactory){
 
 	return class Home {
-		constructor(grid, startingResources, startingPopulation, popGrowth, territory){
+		constructor(grid, startingResources, startingPopulation, popGrowth, territory, homeStart, homeEnd){
 			this.territory = territory || [];
 			this.resources = startingResources;
 			this.grid = grid;
@@ -14,6 +16,7 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 			this.baseDefense = 10;   // calculated property based on buildings / tech / etc. => not state
 			this.population = startingPopulation;
 			this.population.militiaAvailable = startingPopulation.militia;
+			this.buildings = new BuildingManager();
 			this.caps = {  // this will be a calculated property, so not part of state...
 				'farmers': 10,
 				'artisans': 5,
@@ -33,6 +36,7 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 			this.display = homeDisplay();
 			this.citizenManager = citizenManager(this.game.screenWidth, this.game.screenHeight, this.convertCitizen.bind(this), this.disband.bind(this));
 			this.game.stage.addChild(this.display.container, this.citizenManager);
+			this.setInitialTerritory(homeStart, homeEnd);			
 		}
 
 		extractState(){
@@ -41,6 +45,21 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 				territory: this.territory,
 				resources: this.resources			
 			}
+		}
+
+		setInitialTerritory(homeStart, homeEnd){
+			for (let x = homeStart[0]; x <= homeEnd[0]; x++) {
+				for (let y = homeStart[1]; y <= homeEnd[1]; y++) {
+					let starter = TileFactory(
+						'civic', x, y, this.grid, this.grid.rows[x][y].terrain)
+					this.grid.replaceTile(x, y, starter)
+					this.territory.push(starter);
+				}
+			}
+		}
+
+		setInitialBuildings(){
+			this.territory[0].build('farm');
 		}
 
 		addResource(typeAmount){
@@ -65,6 +84,10 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 
 		getAllPopulation(){
 			return cloneObject(this.population);
+		}
+
+		getPopulationCap(type) {
+			return this.caps + this.buildings.getCapAdjustment(type);
 		}
 
 		extractCost(cost){  //returns false (with no side effects) if all resources are not available

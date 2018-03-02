@@ -10,7 +10,7 @@ define([], function(){
 			closeIw();
 		})
 
-		map.zoomToLocation([tile.x, tile.y]);
+
 
 		function closeIw(){
 			if (!expedition.confirmed){
