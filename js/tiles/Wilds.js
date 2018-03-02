@@ -39,14 +39,23 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 
 			setListener(){
 				this.ui.on('pointerup', this.showOptions.bind(this));
-				
 
-				this.ui.on('mouseover', ()=> {
-					this.ui.tint = 0xAAAAFF;
-				});
-				this.ui.on('mouseout', () => {
-					this.ui.tint = 0xFFFFFF;
-				});
+				const width = this.squareSize;
+				const height = this.squareSize * (1 / 1.618); //practical use of the golden mean
+
+				// this.ui.children[0].on('mouseover', ()=> {
+				// 	this.ui.beginFill(0x72613d);
+				// 	this.ui.lineStyle(2, 0xAAAAFF, 3);
+				// 	this.ui.drawPolygon(0, height / 2, width / 2, 0, width, height / 2, width / 2, height);
+				// 	this.ui.endFill();
+				// });
+				// this.ui.children[0].on('mouseout', () => {
+				// 	this.ui.beginFill(0x72613d);
+				// 	this.ui.lineStyle(1, 0x000000, 1);
+				// 	this.ui.drawPolygon(0, height / 2, width / 2, 0, width, height / 2, width / 2, height);
+				// 	this.ui.endFill();
+					
+				// });
 
 			}
 		
