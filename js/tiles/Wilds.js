@@ -78,13 +78,13 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 
 			render(){ //this logic should be passed to the actual ui object, and not handled here
 				if (!this.isExplored){
-					this.ui.tint = 0x333333;
+					//this.ui.tint = 0x333333;
 				} else {
-					this.ui.tint = 0xAAAAAA;
+					//this.ui.tint = 0xAAAAAA;
 					this.ui.interactive = true;
 					this.ui.buttonMode = true;
 				}
-				this.ui.children[0].alpha = this.getDanger()/20;
+				//this.ui.children[0][0].alpha = this.getDanger()/20;
 			}
 		}
 })

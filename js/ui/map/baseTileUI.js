@@ -5,7 +5,7 @@ define([], function(){
     return function(tile){
  
         const hills = new PIXI.Texture.fromImage('./assets/tinyhills.png');
-        const field = new PIXI.Texture.fromImage('./assets/tinyplains.png');
+        const field = new PIXI.Texture.fromImage('./assets/tinyplains2.png');
         const forest = new PIXI.Texture.fromImage('./assets/tinytrees.png');
 
         let ui = new PIXI.Graphics();
@@ -29,18 +29,21 @@ define([], function(){
                 break;
         }
 
-        ui.beginFill(0x72613d);
 
-        ui.lineStyle(1, 0x000, 1);
-        ui.drawPolygon(0, height / 2, width / 2, 0, width, height / 2, width / 2, height);
-
-
-        ui.endFill();
+        //uncomment if we want to see the outlines...
+        // ui.beginFill(0x72613d);
+        // ui.lineStyle(1, 0x000, 1);
+        // ui.drawPolygon(0, height / 2, width / 2, 0, width, height / 2, width / 2, height);
+        // ui.endFill();
 
 
         let sprite = new PIXI.Sprite(uiTexture);
-        // sprite.height = height + 20;
-        // sprite.width = width + 20;
+        sprite.height = 110;
+        sprite.width = 120;
+        sprite.x = -width / 4;
+        sprite.y = -height + 20;
+       
+       // sprite.anchor = [1, 1];
        // sprite.scale = 2;
         ui.addChild(sprite);
 

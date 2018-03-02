@@ -80,7 +80,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			for (let rowNumber = this.grid.rows.length-1; rowNumber >= 0; rowNumber--){
 				for (let colNum = this.grid.rows[rowNumber].length-1; colNum >= 0; colNum--){
 					this.grid.rows[rowNumber][colNum].makeUI();
-					this.map.addChild(this.grid.rows[rowNumber][colNum].ui);
+					this.map.addChildAt(this.grid.rows[rowNumber][colNum].ui, 0);
 				}
 			}
 

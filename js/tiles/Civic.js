@@ -22,7 +22,7 @@ define(['tiles/Square'], function(Square){
 		}
 
 		render(){
-			this.ui.tint = 0xFFFFFF;
+			//this.ui.tint = 0xFFFFFF;
 		}
 
 		setListener(){
