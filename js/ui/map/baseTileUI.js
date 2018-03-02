@@ -39,8 +39,9 @@ define([], function(){
 
 
         let sprite = new PIXI.Sprite(uiTexture);
-        sprite.height = height;
-        sprite.width = width;
+        // sprite.height = height + 20;
+        // sprite.width = width + 20;
+       // sprite.scale = 2;
         ui.addChild(sprite);
 
    
