@@ -8,7 +8,7 @@ define([], function(){
         const field = new PIXI.Texture.fromImage('./assets/tinyplains2.png');
         const forest = new PIXI.Texture.fromImage('./assets/tinytrees.png');
 
-        let ui = new PIXI.Graphics();
+        let ui = new PIXI.Container();
 
         const width = tile.squareSize;
         const height = tile.squareSize * (1 / 1.618); //practical use of the golden mean
@@ -38,8 +38,8 @@ define([], function(){
 
 
         let sprite = new PIXI.Sprite(uiTexture);
-        sprite.height = 110;
-        sprite.width = 120;
+        sprite.height = 90;
+        sprite.width = 100;
         sprite.x = -width / 4;
         sprite.y = -height + 20;
        
@@ -55,15 +55,15 @@ define([], function(){
 
 
     
-        let dot = new PIXI.Graphics();
-        dot.beginFill(0xFF0000);
+        // let dot = new PIXI.Graphics();
+        // dot.beginFill(0xFF0000);
 
-        dot.drawCircle(0, 0, 2);
-        dot.endFill();
-        dot.alpha = 0;
-        dot.x = 5;
-        dot.y = 5;
-        ui.addChild(dot)
-        return ui;
+        // dot.drawCircle(0, 0, 2);
+        // dot.endFill();
+        // dot.alpha = 0;
+        // dot.x = 5;
+        // dot.y = 5;
+        // ui.addChild(dot)
+         return ui;
     }
 })
