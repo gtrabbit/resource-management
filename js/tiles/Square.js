@@ -18,11 +18,12 @@ define(['core/Game', 'ui/map/baseTileUI'], function(Game, makeTileUI){
 		}
 
 		makeUI(){
-			this.ui = makeTileUI(this);
+			this.ui = makeTileUI(this).children[0];
 			this.setListener()
 		}
 
 		setListener(){
+
 		}
 
 		getDanger(){

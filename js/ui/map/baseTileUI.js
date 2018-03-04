@@ -30,25 +30,22 @@ define([], function(){
         }
 
 
-        //uncomment if we want to see the outlines...
+        // uncomment if we want to see the outlines...
         // ui.beginFill(0x72613d);
         // ui.lineStyle(1, 0x000, 1);
         // ui.drawPolygon(0, height / 2, width / 2, 0, width, height / 2, width / 2, height);
         // ui.endFill();
 
-
         let sprite = new PIXI.Sprite(uiTexture);
-        sprite.height = 90;
-        sprite.width = 100;
-        sprite.x = -width / 4;
-        sprite.y = -height + 20;
-       
-       // sprite.anchor = [1, 1];
-       // sprite.scale = 2;
+        sprite.height = height*1.7;
+        sprite.width = width*1.7;
+
+        const tileHitArea = new PIXI.Polygon(0, height / 2, width / 2, 0, width, height / 2, width / 2, height);
+        sprite.hitArea = tileHitArea;
+
         ui.addChild(sprite);
 
-   
-
+        ui.sortOrder = tile.UID;
 
         ui.x = ((tile.x * width) / 2) - (tile.y * width / 2);
         ui.y = (((tile.y) * (height)) + (tile.x * height)) / 2;
@@ -64,6 +61,8 @@ define([], function(){
         // dot.x = 5;
         // dot.y = 5;
         // ui.addChild(dot)
+
+
          return ui;
     }
 })

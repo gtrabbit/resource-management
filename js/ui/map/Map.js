@@ -3,8 +3,28 @@ define([], function(){
     return function map(width, height, squareSize, screenWidth, screenHeight){
         const map = new PIXI.Container();
         map.interactive = true;
+        setMapDragging()
 
-        map
+
+
+        map.sortTiles = function(){
+            this.getChildByName('tileLayer').children.sort((a, b)=>(a.sortOrder - b.sortOrder));
+        }
+
+        map.zoomToLocation = function(coords){
+            const x = (((coords[0] * -squareSize) + (coords[1] * squareSize) + screenWidth) / 2) + this.pivot.x;
+            const y = (((coords[0] / 2) * -(squareSize * 0.618)) + ((coords[1] / 2) * -(squareSize * 0.618)) / 2) + this.pivot.y;
+
+            this.position.set(x , y);
+        }
+
+        return map;
+
+
+        
+        function setMapDragging(){
+
+            map
             .on('pointerdown', onDragStart)
             .on('pointerup', onDragEnd)
             .on('pointerupoutside', onDragEnd)
@@ -35,15 +55,8 @@ define([], function(){
                 /*if (yBound < 100 && yBound > -(lowerRightY + 200))*/ this.y = newPosition.y;
             }
         }
-
-        map.zoomToLocation = function(coords){
-            const x = (((coords[0] * -squareSize) + (coords[1] * squareSize) + screenWidth) / 2) + this.pivot.x;
-            const y = (((coords[0] / 2) * -(squareSize * 0.618)) + ((coords[1] / 2) * -(squareSize * 0.618)) / 2) + this.pivot.y;
-
-            this.position.set(x , y);
         }
 
-        return map;
     }
     
 

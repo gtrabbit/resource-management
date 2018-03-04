@@ -16,6 +16,7 @@ requirejs(['core/Game', 'core/Grid', 'node_modules/pixi.js/dist/pixi.min.js'],
 		app.view.className = "application"
 		document.body.appendChild(app.view);
 		const stage = app.stage;
+		stage.name = 'stage';
 
 		document.getElementById('grow').addEventListener('click', function(){
 			thisGame.update();

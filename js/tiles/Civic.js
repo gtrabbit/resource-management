@@ -14,15 +14,18 @@ define(['tiles/Square'], function(Square){
 		}
 
 		takeTurn(){
-			this.getNeighbors().forEach(a=>{
-				let tile = this.grid.getTile(a[0], a[1]);
-				tile.isExplored = true;
-			})
 			this.render();
 		}
 
 		render(){
-			//this.ui.tint = 0xFFFFFF;
+			this.getNeighbors().forEach(a=>{
+				let tile = this.grid.getTile(a[0], a[1]);
+				if (tile.type === 'wilds') {
+					tile.markAsExplored();
+				}
+				
+			})
+			this.ui.tint = 0xEEEEFF;
 		}
 
 		setListener(){

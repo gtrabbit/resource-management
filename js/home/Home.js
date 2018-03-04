@@ -35,7 +35,7 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 			}
 			this.display = homeDisplay();
 			this.citizenManager = citizenManager(this.game.screenWidth, this.game.screenHeight, this.convertCitizen.bind(this), this.disband.bind(this));
-			this.game.stage.addChild(this.display.container, this.citizenManager);
+			this.game.overlays.addChild(this.display.container, this.citizenManager);
 			this.setInitialTerritory(homeStart, homeEnd);			
 		}
 
@@ -56,6 +56,11 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 					this.territory.push(starter);
 				}
 			}
+		}
+
+		addTileToTerritory(tile){
+			this.territory.push(tile);
+			tile.render();
 		}
 
 		setInitialBuildings(){

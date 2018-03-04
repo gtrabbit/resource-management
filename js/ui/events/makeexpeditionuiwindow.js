@@ -16,7 +16,9 @@ define([], function(){
 			if (!expedition.confirmed){
 				tile.expedition = {};
 			}
+			
 			iw.parent.removeChild(iw);
+			tile.markAsSelected();
 		}
 
 		closer.position.set(240, 0);

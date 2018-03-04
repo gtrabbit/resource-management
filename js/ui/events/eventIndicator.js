@@ -1,13 +1,40 @@
 define([], function(){
     return function(type, tile){
-        let indicator = new PIXI.Graphics();
+        
+        const indicator = new PIXI.Container();
+        const sword1 = new PIXI.Sprite.fromImage('./assets/sword.png');
+        const sword2 = new PIXI.Sprite.fromImage('./assets/sword.png');
 
-        indicator.drawRect(0, 0, 12, 12);
-        indicator.pivot.set(6, 6);
-        indicator.position.set(8, 8);
-        tile.grid.game.animationHook.add(function(delta){
+        sword1.height = 15;
+        sword1.width = 15;
+        sword1.anchor.set(0.5,0.5);
+        indicator.addChild(sword1);
+
+        sword2.height = 15;
+        sword2.width = 15;
+        sword2.anchor.set(0.5,0.5);
+        indicator.addChild(sword2);
+        sword2.rotation = 1;
+
+        indicator.position.set(tile.ui.parent.x + (tile.squareSize / 1.3), tile.ui.parent.y + (tile.squareSize / 3));
+        indicator.on('added', addAnimation);
+        indicator.on('removed', clearAnimation);
+
+        tile.grid.game.floatLayer.addChild(indicator);
+
+        function spin(delta){
             indicator.rotation += 0.05 * delta;
-        })
-        return indicator;
+        }
+        function addAnimation(){
+            tile.grid.game.animationHook.add(spin);
+        }
+        function clearAnimation(){
+            tile.grid.game.animationHook.remove(spin);
+        }
+  
+        return {
+            indicator: indicator,
+            animation: spin
+        };
     }
 })

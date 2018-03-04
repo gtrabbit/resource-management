@@ -1,4 +1,4 @@
-define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', 'ui/infowindow', 'ui/maketextbox',
+define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', 'ui/infowindow/infowindow', 'ui/infowindow/maketextbox',
 		'ui/events/setupeventsbox'], function(Grid, EventResults, Message, MapUI, InfoWindow, makeTextBox, SetupEventsBox){
 	
 
@@ -12,6 +12,19 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			this.screenWidth = screenWidth;
 			this.screenHeight = screenHeight;
 
+			//=========Display Layers=============//
+			this.overlays = new PIXI.Container();
+			this.infoWindowLayer = new PIXI.Container();
+			this.floatLayer = new PIXI.Container();
+			this.tileLayer = new PIXI.Container();
+			this.map = MapUI(state.width, state.height, this.squareSize, screenWidth, screenHeight);
+			this.floatLayer.name = 'floatLayer';
+			this.infoWindowLayer.name = 'infoWindowLayer';
+			this.overlays.name = 'overlays';
+			this.map.name = 'map';
+			this.tileLayer.name = 'tileLayer';
+
+
 			//===========Constants============//
 
 			this.basicFontStyle = {
@@ -22,9 +35,9 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 				padding: 10
 			}  //just for now. something better later for sure
 			this.welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
-			this.squareSize = 80;
+			this.squareSize = 80; //looks like we're stuck at this number for now 
 
-			this.map = MapUI(state.width, state.height, this.squareSize, screenWidth, screenHeight);  //== doesn't belong here, but has to happen before the grid...
+			
 
 			this.state = {
 				growthRate: state.growthRate,
@@ -43,6 +56,10 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			this.eventsDisplay = SetupEventsBox(this.state.events, this.welcomeMessage);
 			this.makeTextBox = makeTextBox;
 			this.infoWindow = InfoWindow();
+
+			//================ Flags ==============//
+			this.pleaseSortTiles;
+
 		}
 
 		//methods...
@@ -77,29 +94,30 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 		}
 
 		setStage(){
+
+			this.stage.addChild(this.map, this.overlays);
+			this.map.addChild(this.tileLayer, this.floatLayer, this.infoWindowLayer);
+
 			for (let rowNumber = this.grid.rows.length-1; rowNumber >= 0; rowNumber--){
 				for (let colNum = this.grid.rows[rowNumber].length-1; colNum >= 0; colNum--){
 					this.grid.rows[rowNumber][colNum].makeUI();
-					this.map.addChildAt(this.grid.rows[rowNumber][colNum].ui, 0);
+					this.tileLayer.addChildAt(this.grid.rows[rowNumber][colNum].ui.parent, 0);
 				}
 			}
 
-
-			// this.grid.rows.forEach((a,j)=>{
-			// 	a.forEach((b,k)=>{
-			// 		b.makeUI();
-			// 		this.map.addChildAt(b.ui, 0);
-			// 	})
-			// })
-			this.stage.addChildAt(this.map, 0);
+			this.stageIsSet = true;
 		}
 
 		update(){
-			this.map.removeChild(this.infoWindow);
+			this.map.removeChild(this.infoWindow); //this needs to be handled by the infowindow itself
 			this.state.turns++;
 			this.grid.home.update(this.state.turns);
 			this.grid.update(this.state.turns);
 			this.showEventResults();
+			if (this.pleaseSortTiles) {
+				this.map.sortTiles();
+				this.pleaseSortTiles = false;
+			}			
 		}
 	}
 })

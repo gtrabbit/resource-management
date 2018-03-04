@@ -55,9 +55,9 @@ define(['ui/events/eventIndicator', 'events/Timer'], function(makeEventIndicator
 				this.confirmed = true;
 				this.tile.showOptions();
 				this.indicator = makeEventIndicator('expedition', this.tile);
-				this.tile.ui.addChild(this.indicator);
+				
 			} else {
-				console.log('that will never work...')
+				console.log('that will never work...');
 			}
 
 		}
@@ -66,7 +66,12 @@ define(['ui/events/eventIndicator', 'events/Timer'], function(makeEventIndicator
 			this.tile.grid.home.modifyPopulace('militiaAvailable', this.militia);
 			this.tile.grid.game.removeEvent(this.eventId);
 			this.confirmed = false;
-			this.tile.ui.removeChild(this.indicator);
+			this.clearIndicator();
+		}
+
+		clearIndicator(){
+			this.tile.ui.removeChild(this.indicator.indicator);
+			this.tile.grid.game.animationHook.remove(this.indicator.animation);
 		}
 
 
@@ -94,7 +99,7 @@ define(['ui/events/eventIndicator', 'events/Timer'], function(makeEventIndicator
 			this.tile.grid.home.modifyPopulace('militiaAvailable', this.militia - results.deaths);
 			this.tile.expedition = {};
 			this.tile.setListener();
-			this.tile.ui.removeChild(this.indicator);
+			this.clearIndicator();
 			return results;
 		}
 	}
