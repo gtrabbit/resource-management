@@ -10,6 +10,9 @@ define([], function(){
         textBox.endFill();
         message.position.set(10, 5)
         textBox.addChild(message);
+        textBox.on('click', function(e){
+            e.stopPropogation();
+        })
         return textBox;
     }
 })

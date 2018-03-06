@@ -69,9 +69,8 @@ define(['ui/events/eventIndicator', 'events/Timer'], function(makeEventIndicator
 			this.clearIndicator();
 		}
 
-		clearIndicator(){
-			this.tile.ui.removeChild(this.indicator.indicator);
-			this.tile.grid.game.animationHook.remove(this.indicator.animation);
+		clearIndicator(){ 
+			this.indicator.remove();
 		}
 
 

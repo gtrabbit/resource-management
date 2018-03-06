@@ -12,19 +12,6 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			this.screenWidth = screenWidth;
 			this.screenHeight = screenHeight;
 
-			//=========Display Layers=============//
-			this.overlays = new PIXI.Container();
-			this.infoWindowLayer = new PIXI.Container();
-			this.floatLayer = new PIXI.Container();
-			this.tileLayer = new PIXI.Container();
-			this.map = MapUI(state.width, state.height, this.squareSize, screenWidth, screenHeight);
-			this.floatLayer.name = 'floatLayer';
-			this.infoWindowLayer.name = 'infoWindowLayer';
-			this.overlays.name = 'overlays';
-			this.map.name = 'map';
-			this.tileLayer.name = 'tileLayer';
-
-
 			//===========Constants============//
 
 			this.basicFontStyle = {
@@ -38,6 +25,21 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			this.squareSize = 80; //looks like we're stuck at this number for now 
 
 			
+
+			//=========Display Layers=============//
+			this.overlays = new PIXI.Container();
+			this.infoWindowLayer = new PIXI.Container();
+			this.floatLayer = new PIXI.Container();
+			this.tileLayer = new PIXI.Container();
+			this.map = MapUI(state.width, state.height, this.squareSize, screenWidth, screenHeight);
+			this.floatLayer.name = 'floatLayer';
+			this.infoWindowLayer.name = 'infoWindowLayer';
+			this.overlays.name = 'overlays';
+			this.map.name = 'map';
+			this.tileLayer.name = 'tileLayer';
+
+
+			//============State=================//
 
 			this.state = {
 				growthRate: state.growthRate,
@@ -115,7 +117,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			this.grid.update(this.state.turns);
 			this.showEventResults();
 			if (this.pleaseSortTiles) {
-				this.map.sortTiles();
+				this.map.sortTiles(this.tileLayer);
 				this.pleaseSortTiles = false;
 			}			
 		}

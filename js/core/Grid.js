@@ -72,13 +72,13 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 		//coords x, y + target tile
 		replaceTile(x, y, tile){
 			this.game.pleaseSortTiles = true;
-			this.game.map.removeChild(this.rows[x].splice(y, 1, tile))
+			this.game.tileLayer.removeChild(this.rows[x].splice(y, 1, tile))
 			tile.makeUI();
 			if (this.game.stageIsSet){
 				tile.render();
 			}
 
-			this.game.map.addChild(tile.ui.parent);
+			this.game.tileLayer.addChild(tile.ui.parent);
 			if (this.home && tile.type === 'civic'){
 				this.home.addTileToTerritory(tile);
 			}

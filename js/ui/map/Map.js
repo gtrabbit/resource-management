@@ -14,8 +14,7 @@ define([], function(){
         map.zoomToLocation = function(coords){
             const x = (((coords[0] * -squareSize) + (coords[1] * squareSize) + screenWidth) / 2) + this.pivot.x;
             const y = (((coords[0] / 2) * -(squareSize * 0.618)) + ((coords[1] / 2) * -(squareSize * 0.618)) / 2) + this.pivot.y;
-
-            this.position.set(x , y);
+            this.position.set(x, y);
         }
 
         return map;
