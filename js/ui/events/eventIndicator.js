@@ -16,7 +16,7 @@ define([], function(){
         indicator.addChild(sword2);
         sword2.rotation = 1;
 
-        indicator.position.set(tile.ui.parent.x + (tile.squareSize / 1.3), tile.ui.parent.y + (tile.squareSize / 3));
+        indicator.position.set(tile.ui.parent.x + (tile.squareSize / 3), tile.ui.parent.y + (tile.squareSize / 4));
         indicator.on('added', addAnimation);
         indicator.on('removed', clearAnimation);
 

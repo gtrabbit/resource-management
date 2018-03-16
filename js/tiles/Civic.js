@@ -1,4 +1,6 @@
-define(['tiles/Square'], function(Square){
+define(['tiles/Square', 'ui/events/makeBuildingUIWindow'], 
+	function(Square, makeBuildingUIWindow){
+
 	return class Civic extends Square {
 		constructor(x, y, grid, terrain){
 			super(x, y, grid, terrain);
@@ -23,14 +25,18 @@ define(['tiles/Square'], function(Square){
 				if (tile.type === 'wilds') {
 					tile.markAsExplored();
 				}
-				
 			})
 			this.ui.tint = 0xEEEEFF;
 		}
 
+		showOptions(){
+			console.log(this);
+			this.grid.game.infoWindow.openWith(makeBuildingUIWindow(this, this.grid.home.buildings.costs), this)
+		}
+
 		setListener(){
 			this.ui.interactive = true;
-			this.ui.on('pointerup', ()=>{console.log(this)});
+			this.ui.on('pointerup', this.showOptions.bind(this));
 		}
 	}
 

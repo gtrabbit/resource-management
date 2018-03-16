@@ -53,7 +53,7 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 					let starter = TileFactory(
 						'civic', x, y, this.grid, this.grid.rows[x][y].terrain)
 					this.grid.replaceTile(x, y, starter)
-					this.territory.push(starter);
+					this.territory.push(starter); //any call subsequent to this should use public method
 				}
 			}
 		}
@@ -199,7 +199,6 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 					if (tile.type === 'wilds'){
 						surroundingSquares[tile.UID] = tile.getDanger();
 						individualDanger += tile.getDanger();
-						tile.isExplored = true;
 					}	
 				})
 				a.currentThreat = individualDanger;

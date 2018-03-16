@@ -13,12 +13,18 @@ define(['home/buildings/farm'], function(Farm){
                 'total': 0
             }
 
+            this.farm = new Farm();
+
             this.buildingTypes = {
                 farm: Farm
             }
 
             this.buildingLevels = {
                 farm: 0
+            }
+
+            this.costs = {
+                farm: this.farm.costs
             }
 
             this.buildings = {
@@ -45,7 +51,5 @@ define(['home/buildings/farm'], function(Farm){
             this.buildings[building.type].push(building);
             this.setCapAdjustment(building.benefits.caps)
         }
-
-
     }
 })

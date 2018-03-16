@@ -37,17 +37,19 @@ define([], function(){
         // ui.endFill();
 
         let sprite = new PIXI.Sprite(uiTexture);
-        sprite.height = height*1.7;
-        sprite.width = width*1.7;
+        sprite.height = height * 1.7;
+        sprite.width = width * 1.7;
+        sprite.x = -27;
+        sprite.y = -17;
 
         const tileHitArea = new PIXI.Polygon(0, height / 2, width / 2, 0, width, height / 2, width / 2, height);
-        sprite.hitArea = tileHitArea;
+        ui.hitArea = tileHitArea;
 
         ui.addChild(sprite);
 
         ui.sortOrder = tile.UID;
 
-        ui.x = ((tile.x * width) / 2) - (tile.y * width / 2);
+        ui.x = ((tile.x * width) - (tile.y * width)) / 2 ;
         ui.y = (((tile.y) * (height)) + (tile.x * height)) / 2;
 
 

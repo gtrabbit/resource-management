@@ -13,7 +13,6 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			this.screenHeight = screenHeight;
 
 			//===========Constants============//
-
 			this.basicFontStyle = {
 				fontFamily: 'Georgia',
 				fontSize: '10pt',
@@ -23,8 +22,6 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			}  //just for now. something better later for sure
 			this.welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
 			this.squareSize = 80; //looks like we're stuck at this number for now 
-
-			
 
 			//=========Display Layers=============//
 			this.overlays = new PIXI.Container();
@@ -38,9 +35,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			this.map.name = 'map';
 			this.tileLayer.name = 'tileLayer';
 
-
 			//============State=================//
-
 			this.state = {
 				growthRate: state.growthRate,
 				width: state.width,
@@ -57,12 +52,12 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			//============Logic/Function============///
 			this.eventsDisplay = SetupEventsBox(this.state.events, this.welcomeMessage);
 			this.makeTextBox = makeTextBox;
-			this.infoWindow = InfoWindow();
+			this.infoWindow = InfoWindow(this.basicFontStyle, this.infoWindowLayer);
 
 			//================ Flags ==============//
 			this.pleaseSortTiles;
 
-		}
+		} //ending the constructor
 
 		//methods...
 
@@ -96,17 +91,14 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 		}
 
 		setStage(){
-
 			this.stage.addChild(this.map, this.overlays);
 			this.map.addChild(this.tileLayer, this.floatLayer, this.infoWindowLayer);
-
 			for (let rowNumber = this.grid.rows.length-1; rowNumber >= 0; rowNumber--){
 				for (let colNum = this.grid.rows[rowNumber].length-1; colNum >= 0; colNum--){
 					this.grid.rows[rowNumber][colNum].makeUI();
 					this.tileLayer.addChildAt(this.grid.rows[rowNumber][colNum].ui.parent, 0);
 				}
 			}
-
 			this.stageIsSet = true;
 		}
 

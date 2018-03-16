@@ -10,6 +10,10 @@ define([], function(){
             }
             this.tile = tile;
             this.type = 'farm';
+            this.costs = {
+                wood: 30,
+                silver: 15
+            }
         }
 
         getBenefits(type){

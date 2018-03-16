@@ -28,8 +28,8 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 		}
 
 		makeAField(){
-			let x = ~~(this.width / 2);
-			let y = ~~(this.height / 2);
+			let x = ~~(this.width / 2) - 1;
+			let y = ~~(this.height / 2) - 1;
 			let tile = this.getTile(x, y);
 			tile.terrain = 'field';
 			tile.getNeighbors().forEach(a=>{
@@ -72,12 +72,20 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 		//coords x, y + target tile
 		replaceTile(x, y, tile){
 			this.game.pleaseSortTiles = true;
-			this.game.tileLayer.removeChild(this.rows[x].splice(y, 1, tile))
+			const oldTile = this.rows[x][y];
+			if (oldTile.hasOwnProperty('ui')){
+				this.game.tileLayer.removeChild(this.rows[x].splice(y, 1, tile)[0].ui)
+					.destroy(true);
+			} else {
+				const thing = this.rows[x].splice(y, 1, tile)[0];
+				console.log(thing);
+			}
 			tile.makeUI();
+
+//it's stupid that I'm making all these checks for special conditions...
 			if (this.game.stageIsSet){
 				tile.render();
 			}
-
 			this.game.tileLayer.addChild(tile.ui.parent);
 			if (this.home && tile.type === 'civic'){
 				this.home.addTileToTerritory(tile);

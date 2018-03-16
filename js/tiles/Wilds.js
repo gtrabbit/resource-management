@@ -38,57 +38,19 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 			}
 
 			setListener(){
-				
 				if (!this.isExplored) {
-					//	this.ui.on('pointerup', ()=>{console.log(this)});
-					// this.ui.interactive = true;
+					//	something?
 				} else {
 					this.ui.interactive = true;
-					this.ui.on('pointerup', this.showOptions.bind(this));
+					this.ui.on('click', this.showOptions.bind(this));
 				}
-
-				
-
-				// const width = this.squareSize;
-				// const height = this.squareSize * (1 / 1.618); //practical use of the golden mean
-
-				// this.ui.children[0].on('mouseover', ()=> {
-				// 	this.ui.beginFill(0x72613d);
-				// 	this.ui.lineStyle(2, 0xAAAAFF, 3);
-				// 	this.ui.drawPolygon(0, height / 2, width / 2, 0, width, height / 2, width / 2, height);
-				// 	this.ui.endFill();
-				// });
-				// this.ui.children[0].on('mouseout', () => {
-				// 	this.ui.beginFill(0x72613d);
-				// 	this.ui.lineStyle(1, 0x000000, 1);
-				// 	this.ui.drawPolygon(0, height / 2, width / 2, 0, width, height / 2, width / 2, height);
-				// 	this.ui.endFill();
-					
-				// });
-
 			}
 		
 			showOptions(){
 				if (!this.expedition.hasOwnProperty('confirmed') && !this.expedition.confirmed){
 					this.expedition = new Expedition(this)
 				}
-				//this logic also needs to be moved elsewhere
-				const iw = this.grid.game.infoWindow;
-				this.grid.game.map.removeChild(iw);
-				const exuiw = MakeExpeditionUIWindow(iw, this.expedition, this.grid.game.basicFontStyle, this, this.map);
-				iw.position.set(this.ui.parent.x+this.squareSize+10, this.ui.parent.y);
-				this.grid.game.makeTextBox(iw, exuiw);
-				this.grid.game.map.addChild(iw);	
-				this.highlight();
-
-				// new logic... in progress
-				//this.grid.game.infoWindow.open(this)
-
-			}
-
-			highlight(){
-				const oldTint = this.ui.tint;
-				this.ui.tint = 0xFF99BB;
+				this.grid.game.infoWindow.openWith(MakeExpeditionUIWindow(this.expedition, this), this);
 			}
 
 			convertMe(){
@@ -96,24 +58,23 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 			}
 
 			markAsExplored(){
+				if (this.isExplored) {
+					return;
+				}
 				this.isExplored = true;
+				this.setListener();
 				this.render();
 			}
 
-			markAsSelected(){ //this logic should be passed to the actual ui object, and not handled here
-				this.ui.tint = this.isExplored ? 0xDDDDDD : 0x777777;
-			}
-
-			render(){ //this logic should be passed to the actual ui object, and not handled here
-				this.ui.tint = this.isExplored ? 0xDDDDDD : 0x777777;
-
+			render(){ //this logic should be passed to the actual ui object
+						//(or somewhere else?), and not handled here
 				if (this.isExplored) {
+					this.ui.tint = 0xDDDDDD;
 					this.ui.interactive = true;
 					this.ui.buttonMode = true;
-				}
-				this.setListener();
-		
-				//this.ui.children[0][0].alpha = this.getDanger()/20;
+				} else {
+					this.ui.tint = 0x777777;
+				}	
 			}
 		}
 })
