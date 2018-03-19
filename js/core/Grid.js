@@ -35,13 +35,13 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 			tile.getNeighbors().forEach(a=>{
 				let b = this.getTile(a[0], a[1])
 				b.terrain = 'field';
-				if (Math.random() > 0.3){
+				if (Math.random() > 0.2){
 					b.getNeighbors().forEach(a=>{
 						tile = this.getTile(a[0], a[1]);
 						tile.terrain = 'field';
-						if (Math.random() > 0.5){
+						if (Math.random() > 0.3){
 							tile.getNeighbors().forEach(a=>{
-								if (Math.random() > 0.8) this.getTile(a[0], a[1]).terrain = 'field';
+								if (Math.random() > 0.6) this.getTile(a[0], a[1]).terrain = 'field';
 							})
 						}
 					})
@@ -57,7 +57,7 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 		//should this be somewhere else? --ideally, home should be able to handle this? like, a Home.init()
 		makeHome(homeStart, homeEnd){
 			return new Home(this, 
-			{'food': 20, 'wood': 10, 'silver': 50, 'popGrowth': 0}, // pass in starting resource values based on difficulty at some point
+			{'food': 20, 'wood': 40, 'silver': 50, 'popGrowth': 0}, // pass in starting resource values based on difficulty at some point
 			{ 'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1 },
 			null, null, homeStart, homeEnd); // pass in starting resource values based on difficulty at some point
 		
@@ -67,26 +67,25 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 		convertTile(targetType, x, y, terrain){
 			const newTile = TileFactory(targetType, x, y, this, terrain, this.growthRate);
 			this.replaceTile(x, y, newTile);
+			return newTile;
 		}
 
-		//coords x, y + target tile
+		//coords of old tile x, y + new tile
 		replaceTile(x, y, tile){
 			this.game.pleaseSortTiles = true;
-			const oldTile = this.rows[x][y];
+			const oldTile = this.rows[x].splice(y, 1, tile)[0];
 			if (oldTile.hasOwnProperty('ui')){
-				this.game.tileLayer.removeChild(this.rows[x].splice(y, 1, tile)[0].ui)
-					.destroy(true);
-			} else {
-				const thing = this.rows[x].splice(y, 1, tile)[0];
-				console.log(thing);
+				oldTile.ui.parent.destroy({children: true});
 			}
-			tile.makeUI();
 
 //it's stupid that I'm making all these checks for special conditions...
+//but then again, subjugating this even further might cause too much fragmentation
 			if (this.game.stageIsSet){
+				tile.makeUI();
+				this.game.tileLayer.addChild(tile.ui.parent);
 				tile.render();
 			}
-			this.game.tileLayer.addChild(tile.ui.parent);
+
 			if (this.home && tile.type === 'civic'){
 				this.home.addTileToTerritory(tile);
 			}

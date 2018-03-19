@@ -51,7 +51,7 @@ define([], function(){
 
         ui.x = ((tile.x * width) - (tile.y * width)) / 2 ;
         ui.y = (((tile.y) * (height)) + (tile.x * height)) / 2;
-
+        ui.name = 'tileContainer - ' + tile.UID;
 
     
         // let dot = new PIXI.Graphics();

@@ -29,12 +29,15 @@ define([], function(){
             tile.grid.game.animationHook.add(spin);
         }
         function clearAnimation(){
-            tile.grid.game.floatLayer.removeChild(indicator);
             tile.grid.game.animationHook.remove(spin);
         }
 
-        indicator.remove = clearAnimation;
-  
+        function remove(){
+            tile.grid.game.floatLayer.removeChild(indicator);
+        }
+        
+        indicator.remove = remove;
+
         return indicator;
     }
 })

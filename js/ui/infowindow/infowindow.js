@@ -26,8 +26,8 @@ define(['ui/infowindow/maketextbox'], function(makeTextbox){
             //when the infowindow is removed
             
             if (selectedTile){
-                infoWindow.on('added', highlightSelectedTile.bind(selectedTile));
-                infoWindow.on('removed', unhighlightSelectedTile.bind(selectedTile));
+                setListeners(selectedTile, messageContainer.onDismiss);
+               
 
             //place the infowindow in relation to the incoming tile
                 infoWindow.position.set(
@@ -47,22 +47,32 @@ define(['ui/infowindow/maketextbox'], function(makeTextbox){
             closer.buttonMode = true;
             closer.on('click', ()=>{
                 infoWindow.closeInfowindow();
+                
             });
             const size = infoWindow.getBounds();
             closer.position.set(size.width - 25, 5);
             textbox.addChild(closer);
-            infoWindow.closeInfowindow = function(){
-                infoWindow.removeChildren();
-                infoWindow.parent.removeChild(infoWindow);
-                messageContainer.onDismiss();
-            }
+
 
             //add the infowindow to the view
             infoWindow.layer.addChild(infoWindow);
+
         }
 
 //some helper stuff
 
+        infoWindow.closeInfowindow = function(){
+            infoWindow.removeChildren();
+            if (infoWindow.parent){
+                infoWindow.parent.removeChild(infoWindow);
+            }            
+        }
+
+        function setListeners(selectedTile, dismissal){
+            infoWindow.on('added', highlightSelectedTile.bind(selectedTile));
+            infoWindow.on('removed', unhighlightSelectedTile.bind(selectedTile));
+            infoWindow.on('removed', dismissal.bind(selectedTile));
+        }
 
         function highlightSelectedTile(){
             this.ui.previousTint = this.ui.tint || 0xDDDDDD;

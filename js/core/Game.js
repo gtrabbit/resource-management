@@ -19,7 +19,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 				wordWrap: true,
 				wordWrapWidth: 230,
 				padding: 10
-			}  //just for now. something better later for sure
+			};  //just for now. something better later for sure
 			this.welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
 			this.squareSize = 80; //looks like we're stuck at this number for now 
 
@@ -44,7 +44,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 				events: state.events || [],
 				eventArchive: state.eventArchive || {},
 				upcomingEvents: state.upcomingEvents || []
-			}
+			};
 
 // we extractState() from grid, so this is not techincally part of state, since grid has logic and the state should only be data
 			this.grid = !state.grid ? new Grid(this) : new Grid(this, state.grid);
@@ -103,7 +103,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 		}
 
 		update(){
-			this.map.removeChild(this.infoWindow); //this needs to be handled by the infowindow itself
+			this.infoWindow.closeInfowindow(); 
 			this.state.turns++;
 			this.grid.home.update(this.state.turns);
 			this.grid.update(this.state.turns);

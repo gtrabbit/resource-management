@@ -91,14 +91,13 @@ define(['ui/events/eventIndicator', 'events/Timer'], function(makeEventIndicator
 
 		resolve(){
 			let results = this.determineResults();
+
+			this.tile.grid.home.modifyPopulace('militia', -results.deaths);
+			this.tile.grid.home.modifyPopulace('militiaAvailable', this.militia);
+			this.clearIndicator();
 			if (!results.defeat){
 				this.tile.convertMe();
 			}
-			this.tile.grid.home.modifyPopulace('militia', -results.deaths);
-			this.tile.grid.home.modifyPopulace('militiaAvailable', this.militia);
-			this.tile.expedition = {};
-			this.tile.setListener();
-			this.clearIndicator();
 			return results;
 		}
 	}

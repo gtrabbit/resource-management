@@ -7,9 +7,9 @@ define([], function(){
 			expedition: expedition,
 			tile: tile,
 
-			onDismiss: function(){
+			onDismiss: function(){ //bound 'this' to tile
 				if (!this.expedition.confirmed){
-					this.tile.expedition = {};
+					this.expedition = {};
 				}
 			},
 

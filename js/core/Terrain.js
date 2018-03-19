@@ -25,21 +25,17 @@ define({
 					})
 					if (environs.hills > 3){
 						b.terrain = 'hills';
-						b.dangerValue = 3;
 					} else if (x > 2 && b.terrain === 'hills' && environs.forest > 2){
 						b.terrain = 'forest';
-						b.dangerValue = 2;
 					} else if (environs.forest > 5){
 						b.terrain = 'forest';
-						b.dangerValue = 2;
 					} else if (x > 2 && environs.field > 4 || x > 4){
-						b.terrain = 'field'
-						b.dangerValue = 1;
+						b.terrain = 'field';
 					}
 				})
 			})
 		}
-		this.checkMap(grid, size)
+		this.checkMap(grid, size);
 	},
 
 

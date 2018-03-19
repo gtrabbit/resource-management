@@ -36,6 +36,10 @@ define(['home/buildings/farm'], function(Farm){
             return this.capAdjustments[type];
         }
 
+        getBuildingCost(type){
+            return this.costs[type];
+        }
+
         setCapAdjustment(typeAmount){
             for (let key in typeAmount){
                 this.capAdjustments[key] += typeAmount[key]

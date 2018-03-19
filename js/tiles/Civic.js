@@ -1,4 +1,4 @@
-define(['tiles/Square', 'ui/events/makeBuildingUIWindow'], 
+define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'], 
 	function(Square, makeBuildingUIWindow){
 
 	return class Civic extends Square {
@@ -11,12 +11,23 @@ define(['tiles/Square', 'ui/events/makeBuildingUIWindow'],
 		}
 
 		build(building){
-			this.usage = building;
-			this.grid.home.buildings.constructBuilding(building, this)
+			if (this.canBuild(building)){
+				this.usage = building;
+				this.grid.home.buildingManager.constructBuilding(building, this);
+				return true;
+			} 
+			return false;
 		}
 
 		takeTurn(){
 			this.render();
+		}
+
+		canBuild(building){
+			if (this.grid.home.extractCost(this.grid.home.buildingManager.getBuildingCost(building))){
+				return true;
+			}
+			return false;			
 		}
 
 		render(){
@@ -26,12 +37,11 @@ define(['tiles/Square', 'ui/events/makeBuildingUIWindow'],
 					tile.markAsExplored();
 				}
 			})
-			this.ui.tint = 0xEEEEFF;
+			this.ui.tint = 0xEEDD33;
 		}
 
 		showOptions(){
-			console.log(this);
-			this.grid.game.infoWindow.openWith(makeBuildingUIWindow(this, this.grid.home.buildings.costs), this)
+			this.grid.game.infoWindow.openWith(makeBuildingUIWindow(this, this.grid.home.buildingManager.costs), this)
 		}
 
 		setListener(){

@@ -16,7 +16,7 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 			this.baseDefense = 10;   // calculated property based on buildings / tech / etc. => not state
 			this.population = startingPopulation;
 			this.population.militiaAvailable = startingPopulation.militia;
-			this.buildings = new BuildingManager();
+			this.buildingManager = new BuildingManager();
 			this.caps = {  // this will be a calculated property, so not part of state...
 				'farmers': 10,
 				'artisans': 5,
@@ -76,7 +76,7 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 				this.resources.popGrowth--;
 				this.modifyPopulace('commoners', 1);
 			}
-			// this.updateDisplay();  --not necessary to do this here
+			this.updateDisplay(); 
 		}
 
 		getResources(type){
@@ -92,18 +92,21 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 		}
 
 		getPopulationCap(type) {
-			return this.caps + this.buildings.getCapAdjustment(type);
+			return this.caps + this.buildingManager.getCapAdjustment(type);
 		}
 
 		extractCost(cost){  //returns false (with no side effects) if all resources are not available
 			let total = {};
 			
 			for (let key in cost){
-				if (this.resources[key] >= cost[key]){
-					if (cost[key] < 0) total[key] = cost[key];
-				} else {
-					return false
+				if (cost.hasOwnProperty(key)){
+					if (this.resources[key] >= -cost[key]){
+						if (cost[key] < 0) total[key] = cost[key];
+					} else {
+						return false
+					}
 				}
+
 			}
 			this.addResource(total);
 			return true;
