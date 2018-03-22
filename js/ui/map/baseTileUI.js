@@ -53,18 +53,6 @@ define([], function(){
         ui.y = (((tile.y) * (height)) + (tile.x * height)) / 2;
         ui.name = 'tileContainer - ' + tile.UID;
 
-    
-        // let dot = new PIXI.Graphics();
-        // dot.beginFill(0xFF0000);
-
-        // dot.drawCircle(0, 0, 2);
-        // dot.endFill();
-        // dot.alpha = 0;
-        // dot.x = 5;
-        // dot.y = 5;
-        // ui.addChild(dot)
-
-
          return ui;
     }
 })
