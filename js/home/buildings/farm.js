@@ -14,6 +14,7 @@ define([], function(){
                 wood: -30,
                 silver: -15
             }
+            this.buildTime = 3;
         }
 
         getBenefits(type){
