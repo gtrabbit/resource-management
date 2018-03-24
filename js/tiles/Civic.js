@@ -8,6 +8,7 @@ define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'],
 			this.type = 'civic';
 			this.currentThreat = 0;
 			this.isExplored = true;
+			this.ongoingConstruction = null;
 		}
 
 		build(building){
@@ -30,6 +31,15 @@ define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'],
 			return false;			
 		}
 
+		showOptions(){
+			this.grid.game.infoWindow.openWith(makeBuildingUIWindow(this, this.grid.home.buildingManager.costs), this)
+		}
+
+		setListener(){
+			this.ui.interactive = true;
+			this.ui.on('click', this.showOptions.bind(this));
+		}
+		
 		render(){
 			this.getNeighbors().forEach(a=>{
 				let tile = this.grid.getTile(a[0], a[1]);
@@ -38,15 +48,6 @@ define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'],
 				}
 			})
 			this.ui.tint = 0xEEDD33;
-		}
-
-		showOptions(){
-			this.grid.game.infoWindow.openWith(makeBuildingUIWindow(this, this.grid.home.buildingManager.costs), this)
-		}
-
-		setListener(){
-			this.ui.interactive = true;
-			this.ui.on('pointerup', this.showOptions.bind(this));
 		}
 	}
 
