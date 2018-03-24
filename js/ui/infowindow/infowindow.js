@@ -1,4 +1,4 @@
-define(['ui/infowindow/maketextbox'], function(makeTextbox){
+define(['ui/infowindow/maketextbox', 'ui/infowindow/closer'], function(makeTextbox, makeCloser){
 
     return function makeInfoWindow(style, infowindowLayer){
 
@@ -41,18 +41,9 @@ define(['ui/infowindow/maketextbox'], function(makeTextbox){
             }
             
             //Make the closer (little x in corner)
-        //this should be abstracted elsewhere...
-            const closer = new PIXI.Text('X', style);
-            closer.interactive = true;
-            closer.buttonMode = true;
-            closer.on('click', ()=>{
-                infoWindow.closeInfowindow();
-                
-            });
-            const size = infoWindow.getBounds();
-            closer.position.set(size.width - 25, 5);
-            textbox.addChild(closer);
+            const closer = makeCloser(infoWindow, infoWindow.closeInfowindow, style);
 
+            textbox.addChild(closer);
 
             //add the infowindow to the view
             infoWindow.layer.addChild(infoWindow);

@@ -4,7 +4,7 @@ define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'],
 	return class Civic extends Square {
 		constructor(x, y, grid, terrain){
 			super(x, y, grid, terrain);
-			this.usage = 'field';
+			this.building = null;
 			this.type = 'civic';
 			this.currentThreat = 0;
 			this.isExplored = true;
@@ -13,8 +13,7 @@ define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'],
 
 		build(building){
 			if (this.canBuild(building)){
-				this.usage = building;
-				this.grid.home.buildingManager.constructBuilding(building, this);
+				this.grid.home.buildingManager.startConstruction(building, this);
 				return true;
 			} 
 			return false;

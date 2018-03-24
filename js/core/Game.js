@@ -45,6 +45,8 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 				eventArchive: state.eventArchive || {},
 				upcomingEvents: state.upcomingEvents || []
 			};
+			this.startingResources = state.startingResources;
+			this.startingPopulation = state.startingPopulation;
 
 // we extractState() from grid, so this is not techincally part of state, since grid has logic and the state should only be data
 			this.grid = !state.grid ? new Grid(this) : new Grid(this, state.grid);

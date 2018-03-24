@@ -16,7 +16,7 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 			this.baseDefense = 10;   // calculated property based on buildings / tech / etc. => not state
 			this.population = startingPopulation;
 			this.population.militiaAvailable = startingPopulation.militia;
-			this.buildingManager = new BuildingManager();
+			this.buildingManager = new BuildingManager(this);
 			this.caps = {  // this will be a calculated property, so not part of state...
 				'farmers': 10,
 				'artisans': 5,
@@ -64,7 +64,7 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 		}
 
 		setInitialBuildings(){
-			this.territory[0].build('farm');
+			this.buildingManager.finishConstruction(this.buildingManager.makeBuilding('farm', this.territory[0]), this.territory[0]);
 		}
 
 		addResource(typeAmount){

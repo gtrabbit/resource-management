@@ -1,8 +1,10 @@
-define(['home/buildings/farm'], function(Farm){
+define(['home/buildings/farm', 'events/construction'], function(Farm, Construction){
 
 
     return class BuildingManager {
-        constructor(){
+        constructor(home){
+            this.home = home;
+
             this.capAdjustments = {
                 'farmers': 0,
                 'artisans': 0,
@@ -46,9 +48,18 @@ define(['home/buildings/farm'], function(Farm){
             }
         }
 
-        constructBuilding(buildingType, tile) {
-            const building = new this.buildingTypes[buildingType](tile, this.buildingLevels[buildingType]);
+        makeBuilding(buildingType, tile){
+            return new this.buildingTypes[buildingType](tile, this.buildingLevels[buildingType]);
+        }
+
+        startConstruction(buildingType, tile){
+            const building = this.makeBuilding(buildingType);
+            this.home.game.addEvent(new Construction(building, tile));
+        }
+
+        finishConstruction(building, tile) {
             this.addNewBuilding(building);
+            tile.building = building;
         }
 
         addNewBuilding(building) {

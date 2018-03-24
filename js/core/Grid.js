@@ -7,7 +7,6 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 			this.growthRate = game.state.growthRate;
 			this.game = game;
 			this.squareSize = game.squareSize;
-
 			if (!savedGrid){
 				this.rows = [];
 				this.buildMap();
@@ -56,9 +55,7 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 
 		//should this be somewhere else? --ideally, home should be able to handle this? like, a Home.init()
 		makeHome(homeStart, homeEnd){
-			return new Home(this, 
-			{'food': 20, 'wood': 40, 'silver': 50, 'popGrowth': 0}, // pass in starting resource values based on difficulty at some point
-			{ 'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1 },
+			return new Home(this, this.game.startingResources, this.game.startingPopulation,
 			null, null, homeStart, homeEnd); // pass in starting resource values based on difficulty at some point
 		
 		}
