@@ -50,7 +50,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 
 // we extractState() from grid, so this is not techincally part of state, since grid has logic and the state should only be data
 			this.grid = !state.grid ? new Grid(this) : new Grid(this, state.grid);
-			
+			this.home = this.grid.home;
 			//============Logic/Function============///
 			this.eventsDisplay = SetupEventsBox(this.state.events, this.welcomeMessage);
 			this.makeTextBox = makeTextBox;
@@ -102,6 +102,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 				}
 			}
 			this.stageIsSet = true;
+			this.home.setInitialBuildings();
 		}
 
 		update(){

@@ -16,16 +16,18 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 			this.baseDefense = 10;   // calculated property based on buildings / tech / etc. => not state
 			this.population = startingPopulation;
 			this.population.militiaAvailable = startingPopulation.militia;
-			this.buildingManager = new BuildingManager(this);
-			this.caps = {  // this will be a calculated property, so not part of state...
-				'farmers': 10,
-				'artisans': 5,
-				'woodsmen': 8,
-				'militia': 5,
+			
+			this.basePopulationCaps = {  
+				'farmers': 5,
+				'artisans': 2,
+				'woodsmen': 3,
+				'militia': 2,
 				'militiaAvailable': Infinity,
 				'commoners': Infinity,
-				'total': 50
+				'total': 10
 			}
+			this.caps = {}; // this will be a calculated property, so not part of state...
+			
 			this.citizens = {
 				artisans: new Artisan(null),
 				commoners: new Commoner(null),
@@ -36,7 +38,8 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 			this.display = homeDisplay();
 			this.citizenManager = citizenManager(this.game.screenWidth, this.game.screenHeight, this.convertCitizen.bind(this), this.disband.bind(this));
 			this.game.overlays.addChild(this.display.container, this.citizenManager);
-			this.setInitialTerritory(homeStart, homeEnd);			
+			this.setInitialTerritory(homeStart, homeEnd);
+			this.buildingManager = new BuildingManager(this);			
 		}
 
 		extractState(){
@@ -61,6 +64,11 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 		addTileToTerritory(tile){
 			this.territory.push(tile);
 			tile.render();
+		}
+
+		setPopulationCaps(newCaps){
+			this.caps = newCaps;
+			this.updateDisplay(newCaps);
 		}
 
 		setInitialBuildings(){
@@ -179,13 +187,8 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 			this.updateDisplay();
 		}
 
-		updateDisplay(){ //This updating needs to be handled by the display itself-- this class should not require knowledge of how the display is handled
-			const numbers = {...this.population, ...this.resources};
-			Object.keys(numbers).forEach(a=>{
-				if (this.display.hasOwnProperty(a)) {
-					this.display[a].text = this.display[a].text.replace(/\d+/, numbers[a])
-				}
-			})
+		updateDisplay(){ 
+			this.display.update({...this.population, ...this.resources});
 		}
 		
 		determineLosses(def){

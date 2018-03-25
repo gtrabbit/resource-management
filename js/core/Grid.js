@@ -108,7 +108,7 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 			Terrain.generateTerrain(this.rows);
 			this.homeStart = this.makeAField();
 			this.home = this.makeHome(this.homeStart, this.homeStart.map(a=>a+1));
-			this.home.setInitialBuildings();
+			
 		}
 	}
 })

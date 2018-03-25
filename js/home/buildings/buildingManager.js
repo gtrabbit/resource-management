@@ -1,4 +1,6 @@
-define(['home/buildings/farm', 'events/construction'], function(Farm, Construction){
+define(['home/buildings/farm',
+        'events/construction',
+        'utils/sumObjects'], function(Farm, Construction, sumObjects){
 
 
     return class BuildingManager {
@@ -14,6 +16,8 @@ define(['home/buildings/farm', 'events/construction'], function(Farm, Constructi
                 'commoners': 0,
                 'total': 0
             }
+
+            this.basePopulationCaps = home.basePopulationCaps;
 
             this.farm = new Farm();
 
@@ -46,6 +50,7 @@ define(['home/buildings/farm', 'events/construction'], function(Farm, Constructi
             for (let key in typeAmount){
                 this.capAdjustments[key] += typeAmount[key]
             }
+            this.home.setPopulationCaps(sumObjects(this.basePopulationCaps, this.capAdjustments));
         }
 
         makeBuilding(buildingType, tile){
@@ -59,7 +64,7 @@ define(['home/buildings/farm', 'events/construction'], function(Farm, Constructi
 
         finishConstruction(building, tile) {
             this.addNewBuilding(building);
-            tile.building = building;
+            tile.finishConstruction(building);
         }
 
         addNewBuilding(building) {

@@ -19,19 +19,20 @@ define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'],
 			return false;
 		}
 
-		takeTurn(){
-			this.render();
+		canBuild(building){
+			return this.grid.home
+				.extractCost(this.grid.home.buildingManager
+				.getBuildingCost(building));
 		}
 
-		canBuild(building){
-			if (this.grid.home.extractCost(this.grid.home.buildingManager.getBuildingCost(building))){
-				return true;
-			}
-			return false;			
+		finishConstruction(building){
+			this.building = building;
+			this.ui.addChild(building.ui);
 		}
 
 		showOptions(){
-			this.grid.game.infoWindow.openWith(makeBuildingUIWindow(this, this.grid.home.buildingManager.costs), this)
+			this.grid.game.infoWindow.openWith(
+				makeBuildingUIWindow(this, this.grid.home.buildingManager.costs), this)
 		}
 
 		setListener(){
@@ -39,6 +40,9 @@ define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'],
 			this.ui.on('click', this.showOptions.bind(this));
 		}
 		
+		takeTurn(){
+			this.render();
+		}
 		render(){
 			this.getNeighbors().forEach(a=>{
 				let tile = this.grid.getTile(a[0], a[1]);
