@@ -21,9 +21,9 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 				'farmers': 5,
 				'artisans': 2,
 				'woodsmen': 3,
-				'militia': 2,
+				'militia': 3,
 				'militiaAvailable': Infinity,
-				'commoners': Infinity,
+				'commoners': 10,
 				'total': 10
 			}
 			this.caps = {}; // this will be a calculated property, so not part of state...
@@ -68,7 +68,7 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 
 		setPopulationCaps(newCaps){
 			this.caps = newCaps;
-			this.updateDisplay(newCaps);
+			this.updateDisplay(true, newCaps);
 		}
 
 		setInitialBuildings(){
@@ -187,8 +187,9 @@ define(['tiles/Civic', 'ui/home/resAndPopDisplay',
 			this.updateDisplay();
 		}
 
-		updateDisplay(){ 
-			this.display.update({...this.population, ...this.resources});
+		updateDisplay(changeToTotals, newValues){
+			const updateValue = newValues ? newValues : {...this.population, ...this.resources};
+			this.display.update(updateValue, changeToTotals);
 		}
 		
 		determineLosses(def){
