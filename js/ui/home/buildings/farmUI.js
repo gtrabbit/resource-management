@@ -1,6 +1,7 @@
-define(['ui/infowindow/maketextbox'], function(textbox){
-    return function(){
-        const farm = textbox(new PIXI.Text('Farm'));
-        return farm;
+define([], function(){
+    return function(tile, level){
+        const mapSprite = new PIXI.Text('farm', {fontSize: '12'});
+        mapSprite.position.set(25, 15);
+        return mapSprite;
     }
 })

@@ -6,7 +6,6 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 				this.growthRate = growthRate;
 				this.type = "wilds";
 				this.expedition = {};
-				this.iw = this.grid.game.infoWindow;
 				this.map = this.grid.game.map;
 			}
 
@@ -50,7 +49,11 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 				if (!this.expedition.hasOwnProperty('confirmed') && !this.expedition.confirmed){
 					this.expedition = new Expedition(this)
 				}
-				this.grid.game.infoWindow.openWith(MakeExpeditionUIWindow(this.expedition, this), this);
+				if (this.grid.game.infoWindow.isOpen && this.grid.game.infoWindow.activeTile.UID === this.UID) {
+					this.grid.game.infoWindow.closeInfoWindow();
+				} else {
+					this.grid.game.infoWindow.openWith(MakeExpeditionUIWindow(this.expedition, this), this);
+				}
 			}
 
 			convertMe(){
@@ -66,7 +69,7 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 				this.render();
 			}
 
-			render(){ //this logic should be passed to the actual ui object
+			render(){ 	//this logic should be passed to the actual ui object
 						//(or somewhere else?), and not handled here
 				if (this.isExplored) {
 					this.ui.tint = 0xDDDDDD;

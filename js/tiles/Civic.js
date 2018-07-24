@@ -19,20 +19,35 @@ define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'],
 			return false;
 		}
 
-		canBuild(building){
+		//pays the price if possible and returns true, otherwise returns false
+		canBuild(buildingType, level = 0){
 			return this.grid.home
 				.extractCost(this.grid.home.buildingManager
-				.getBuildingCost(building));
+				.getBuildingCost(buildingType, level)
+			);
+		}
+
+		upgrade(buildingType, level) {
+			if (this.canBuild(buildingType, level)){
+				this.grid.home.buildingManager.startConstruction(buildingType, this, level, true);
+				return true;
+			}
+			return false;
 		}
 
 		finishConstruction(building){
 			this.building = building;
-			this.ui.addChild(building.ui);
+			this.ui.addChild(building.ui); //this won't work for upgrading... (need to replace the current building UI)
 		}
 
 		showOptions(){
-			this.grid.game.infoWindow.openWith(
-				makeBuildingUIWindow(this, this.grid.home.buildingManager.costs), this)
+			if (!this.building) {
+				this.grid.game.infoWindow.openWith(
+					makeBuildingUIWindow(this, this.grid.home.buildingManager.getBuildingCost()), this)
+			} else {
+				this.building.openUI(this.grid.game.infoWindowLayer);
+			}
+			
 		}
 
 		setListener(){

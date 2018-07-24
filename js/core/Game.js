@@ -106,7 +106,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 		}
 
 		update(){
-			this.infoWindow.closeInfowindow(); 
+			this.infoWindow.closeInfoWindow(); 
 			this.state.turns++;
 			this.grid.home.update(this.state.turns);
 			this.grid.update(this.state.turns);

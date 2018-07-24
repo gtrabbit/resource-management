@@ -25,10 +25,6 @@ define(['home/buildings/farm',
                 farm: Farm
             }
 
-            this.buildingLevels = {
-                farm: 0
-            }
-
             this.costs = {
                 farm: this.farm.costs
             }
@@ -42,8 +38,8 @@ define(['home/buildings/farm',
             return this.capAdjustments[type];
         }
 
-        getBuildingCost(type){
-            return this.costs[type];
+        getBuildingCost(type, level = 0){
+            return type ? this.costs[type][level] : this.costs;
         }
 
         setCapAdjustment(typeAmount){
@@ -53,13 +49,13 @@ define(['home/buildings/farm',
             this.home.setPopulationCaps(sumObjects(this.basePopulationCaps, this.capAdjustments));
         }
 
-        makeBuilding(buildingType, tile){
-            return new this.buildingTypes[buildingType](tile, this.buildingLevels[buildingType]);
+        makeBuilding(buildingType, tile, level = 0){
+            return new this.buildingTypes[buildingType](tile, level);
         }
 
-        startConstruction(buildingType, tile){
-            const building = this.makeBuilding(buildingType);
-            this.home.game.addEvent(new Construction(building, tile));
+        startConstruction(buildingType, tile, level, isUpgrade){
+            const building = this.makeBuilding(buildingType, tile, level);
+            this.home.game.addEvent(new Construction(building, tile, isUpgrade));
         }
 
         finishConstruction(building, tile) {
@@ -67,9 +63,19 @@ define(['home/buildings/farm',
             tile.finishConstruction(building);
         }
 
+        finishUpgrade(building, tile) {
+            this.replaceBuilding(building);
+            tile.finishUpgrade(building);
+        }
+
         addNewBuilding(building) {
             this.buildings[building.type].push(building);
             this.setCapAdjustment(building.benefits.caps)
+        }
+
+        replaceBuilding(building) {
+            //oh shit. just realized I'm going to need to pass through a reference to the previous building....
+            //maybe better just to call this directly on the building itself?
         }
     }
 })

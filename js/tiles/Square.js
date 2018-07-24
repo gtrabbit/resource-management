@@ -11,6 +11,7 @@ define(['core/Game', 'ui/map/baseTileUI'], function(Game, makeTileUI){
 				this.terrain = terrainType;
 				this.isExplored = false;
 				this.squareSize = grid.squareSize;
+				this.fontStyle = grid.game.basicFontStyle;
 			}
 
 		getNeighbors(){
@@ -24,6 +25,13 @@ define(['core/Game', 'ui/map/baseTileUI'], function(Game, makeTileUI){
 
 		setListener(){
 
+		}
+
+		getSpritePosition(){
+			return {
+				x: this.ui.parent.x + this.squareSize,
+				y: this.ui.parent.y
+			}
 		}
 
 		getDanger(){

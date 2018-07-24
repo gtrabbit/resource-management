@@ -10,7 +10,7 @@ define([], function(){
                 const messageContainer = new PIXI.Container();
                 const heading =         new PIXI.Text("Available Buildings:               Costs:", style);
                 const headSubtitle =    new PIXI.Text("wood / silver", style);
-                const farmMsg =         new PIXI.Text("   Farm                                 " + `${-buildingCosts.farm.wood} / ${-buildingCosts.farm.silver}`, style);
+                const farmMsg =         new PIXI.Text("   Farm                                 " + `${-buildingCosts.farm[0].wood} / ${-buildingCosts.farm[0].silver}`, style);
                 const buyFarm =         new PIXI.Text("-- Buy", style);
                 buyFarm.name = 'farm';
 

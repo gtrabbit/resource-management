@@ -4,10 +4,14 @@ define(['ui/infowindow/maketextbox', 'ui/infowindow/closer'], function(makeTextb
 
         let infoWindow = new PIXI.Container();
         infoWindow.layer = infowindowLayer;
+        infoWindow.isOpen = false;
+        infoWindow.activeTile = null;
 
         //function called when one wants to open the infowindow
         //with a particular message (basically always, right?)
         infoWindow.openWith = function(messageContainer, selectedTile){
+            infoWindow.activeTile = selectedTile;
+            infoWindow.isOpen = true;
             infoWindow.layer.removeChild(infoWindow);
             //clear out what was there previously
             infoWindow.removeChildren();
@@ -41,7 +45,7 @@ define(['ui/infowindow/maketextbox', 'ui/infowindow/closer'], function(makeTextb
             }
             
             //Make the closer (little x in corner)
-            const closer = makeCloser(infoWindow, infoWindow.closeInfowindow, style);
+            const closer = makeCloser(infoWindow, infoWindow.closeInfoWindow, style);
 
             textbox.addChild(closer);
 
@@ -52,7 +56,8 @@ define(['ui/infowindow/maketextbox', 'ui/infowindow/closer'], function(makeTextb
 
 //some helper stuff
 
-        infoWindow.closeInfowindow = function(){
+        infoWindow.closeInfoWindow = function(){
+            infoWindow.isOpen = false;
             infoWindow.removeChildren();
             if (infoWindow.parent){
                 infoWindow.parent.removeChild(infoWindow);
