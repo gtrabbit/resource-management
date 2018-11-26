@@ -1,3 +1,4 @@
+//is a shallow clone, obviously
 define([], function(){
     return function(a){
         const clone = {};

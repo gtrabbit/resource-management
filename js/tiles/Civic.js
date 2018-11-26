@@ -8,12 +8,14 @@ define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'],
 			this.type = 'civic';
 			this.currentThreat = 0;
 			this.isExplored = true;
-			this.ongoingConstruction = null;
+			this.ongoingConstruction = false;
+			this.home = grid.home;
 		}
 
 		build(building){
 			if (this.canBuild(building)){
-				this.grid.home.buildingManager.startConstruction(building, this);
+				this.ongoingConstruction = true;
+				this.home.startConstruction(building, this);
 				return true;
 			} 
 			return false;
@@ -21,29 +23,41 @@ define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'],
 
 		//pays the price if possible and returns true, otherwise returns false
 		canBuild(buildingType, level = 0){
-			return this.grid.home
-				.extractCost(this.grid.home.buildingManager
-				.getBuildingCost(buildingType, level)
+			return this.home
+				.extractCost(this.home.getBuildingCost(buildingType, level) 
 			);
 		}
 
 		upgrade(buildingType, level) {
 			if (this.canBuild(buildingType, level)){
-				this.grid.home.buildingManager.startConstruction(buildingType, this, level, true);
+				this.ongoingConstruction = true;
+				this.home.startConstruction(buildingType, this, level, true); 
 				return true;
 			}
 			return false;
 		}
 
 		finishConstruction(building){
+			return this.setBuilding(building);
+		}
+
+		finishUpgrade(building) {
+			return this.setBuilding(building);
+		}
+
+		setBuilding(building) {
+			const formerBuilding = this.building;
+			this.ongoingConstruction = false;
 			this.building = building;
-			this.ui.addChild(building.ui); //this won't work for upgrading... (need to replace the current building UI)
+			return formerBuilding;
 		}
 
 		showOptions(){
-			if (!this.building) {
+			if (this.ongoingConstruction) {
+				console.log("show an ongoing construction window");
+			} else if (!this.building) {
 				this.grid.game.infoWindow.openWith(
-					makeBuildingUIWindow(this, this.grid.home.buildingManager.getBuildingCost()), this)
+					makeBuildingUIWindow(this, this.home.getBuildingsAvailableToBuild()), this); 
 			} else {
 				this.building.openUI(this.grid.game.infoWindowLayer);
 			}
@@ -57,6 +71,9 @@ define(['tiles/Square', 'ui/home/buildings/makeBuildingUIWindow'],
 		
 		takeTurn(){
 			this.render();
+			if (this.building) {
+				this.building.takeTurn();
+			}
 		}
 		render(){
 			this.getNeighbors().forEach(a=>{

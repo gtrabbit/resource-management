@@ -53,14 +53,6 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 			return this.rows[x][y];
 		}
 
-		//should this be somewhere else? --ideally, home should be able to handle this? like, a Home.init()
-		makeHome(homeStart, homeEnd){
-			return new Home(this, this.game.startingResources, this.game.startingPopulation,
-			null, null, homeStart, homeEnd); // pass in starting resource values based on difficulty at some point
-		
-		}
-
-
 		convertTile(targetType, x, y, terrain){
 			const newTile = TileFactory(targetType, x, y, this, terrain, this.growthRate);
 			this.replaceTile(x, y, newTile);
@@ -74,18 +66,9 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 			if (oldTile.hasOwnProperty('ui')){
 				oldTile.ui.parent.destroy({children: true});
 			}
-
-//it's stupid that I'm making all these checks for special conditions...
-//but then again, subjugating this even further might cause too much fragmentation
-			if (this.game.stageIsSet){
-				tile.makeUI();
-				this.game.tileLayer.addChild(tile.ui.parent);
-				tile.render();
-			}
-
-			if (this.home && tile.type === 'civic'){
-				this.home.addTileToTerritory(tile);
-			}
+			tile.makeUI();
+			this.game.tileLayer.addChild(tile.ui.parent);
+			tile.render();			
 		}
 
 		update(turnNumber){
@@ -107,8 +90,7 @@ define(['home/Home', 'core/Terrain', 'tiles/tileFactory'],
 			}
 			Terrain.generateTerrain(this.rows);
 			this.homeStart = this.makeAField();
-			this.home = this.makeHome(this.homeStart, this.homeStart.map(a=>a+1));
-			
+			this.home = new Home(this, this.game.startingResources, this.game.startingPopulation);			
 		}
 	}
 })

@@ -1,0 +1,61 @@
+citizen menus:
+    +/- citizens (+cost)
+    current stats
+    upgrades - and their benefits 
+        --(greyed-out unavailable) + indication of what is lacking
+    general information
+    close
+
+Building (new)
+    available buildings (+costs) 
+        --(greyed-out unavailable) + indication of lacking
+        --tooltip (or something?) for help on the buildings?
+    close
+
+Building (existing)
+    benefits
+    upgrades 
+        --(greyed-out unavailable)+ indication of what is lacking
+        --costs
+    demolish refund?
+    close
+
+Battle window (new)
+    +/- soliders dedicated to battle
+    difficulty indicator
+    turns to complete
+    % chance of victory
+    confirm
+
+Battle window (existing)
+    turns until completion -- countdown
+    soliders commited count
+    difficulty + chance of victory
+    cancel
+
+End of turn log
+    resources gained / lost
+    citizens gained / lost
+    event outcomes
+    news?
+    close
+    archive (forward / back)
+
+=====Utility Management Stuff?====
+
+Building Management
+    lists all buildings
+    basic information 
+    click to open particular building
+    possibly perform basic actions from here
+
+Citizen Management
+    similar to above
+
+History view?
+
+Tech / Research?
+
+Ongoing Events?
+
+Options / Settings / Main Menu-kinda thing

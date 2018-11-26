@@ -1,29 +1,29 @@
-define(['ui/home/buildings/farmUI', 'home/buildings/buildingBase'], function(farmUI, Building){
+define(['ui/home/buildings/towerUI', 'home/buildings/buildingBase'], function(towerUI, Building){
 
-    const typeName = 'farm';
-    
-    return class Farm extends Building {
+    const typeName = 'tower';
+
+    return class Tower extends Building {
         constructor(tile, level){
             super(tile, level, typeName);
             this.benefits = this.setBenefits();
             this.type = typeName;
-            this.displayName = 'farm';
+            this.displayName = 'tower';
             this.buildTime = 3;
             this.buildingYield = 1;
             this.currentLoad = 0;
             this.capacity = 3;
             if (tile) { //if we pass a tile, then we know this is an actual implementation and should build the UI
-                this.ui = new farmUI(tile, level);  
+                this.ui = new towerUI(tile, level);  
             }
         }
 
         static getCosts(level) {
             const costs = [
-                {wood: -30, silver: -15},
-                {wood: -30, silver: -20},
-                {wood: -40, silver: -25},
-                {wood: -60, silver: -30},
-                {wood: -80, silver: -40}
+                {wood: -20, silver: -5},
+                {wood: -40, silver: -10},
+                {wood: -55, silver: -25},
+                {wood: -100, silver: -40},
+                {wood: -150, silver: -65}
             ];
             return level !== undefined 
                 ? costs[level]
@@ -44,11 +44,14 @@ define(['ui/home/buildings/farmUI', 'home/buildings/buildingBase'], function(far
 
         levelUp(level) {
             this.capacity = 3 + level;
-            this.buildingYield = Math.round(1 + (level / 3));
+            this.buildTime = level + 3;
+            this.buildingYield = Math.round(1 + (level / 2));
         }
 
         setBenefits() {
-            this.benefits = {};
+            this.benefits = {
+                defense: (this.level * 2) + 4
+            };
             return this.benefits;
         }
 

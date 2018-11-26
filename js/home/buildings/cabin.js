@@ -1,19 +1,19 @@
-define(['ui/home/buildings/farmUI', 'home/buildings/buildingBase'], function(farmUI, Building){
+define(['ui/home/buildings/cabinUI', 'home/buildings/buildingBase'], function(cabinUI, Building){
 
-    const typeName = 'farm';
+    const typeName = 'cabin';
     
-    return class Farm extends Building {
+    return class Cabin extends Building {
         constructor(tile, level){
             super(tile, level, typeName);
             this.benefits = this.setBenefits();
             this.type = typeName;
-            this.displayName = 'farm';
-            this.buildTime = 3;
+            this.displayName = 'cabin';
+            this.buildTime = 2;
             this.buildingYield = 1;
             this.currentLoad = 0;
-            this.capacity = 3;
+            this.capacity = 2;
             if (tile) { //if we pass a tile, then we know this is an actual implementation and should build the UI
-                this.ui = new farmUI(tile, level);  
+                this.ui = new cabinUI(tile, level);  
             }
         }
 
@@ -43,7 +43,7 @@ define(['ui/home/buildings/farmUI', 'home/buildings/buildingBase'], function(far
         }
 
         levelUp(level) {
-            this.capacity = 3 + level;
+            this.capacity += level;
             this.buildingYield = Math.round(1 + (level / 3));
         }
 

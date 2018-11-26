@@ -2,11 +2,15 @@ define(['events/message', 'ui/home/homedashboard'], function(Message, makeDashbo
 	return function(){
 
 		const display = makeDashboard();
-		
-		function update(typeAmount, isTotal){
+		const cachedValues = {};
+		function update(typeAmount){
 			Object.keys(typeAmount).forEach(a=>{
 				if (typeAmount.hasOwnProperty(a) && a !== 'popGrowth') {
-					display.updateItem(a, isTotal && a !== 'militiaAvailable', typeAmount[a]);
+					let amount = typeAmount[a];
+					if (cachedValues[a] !== amount) {
+						cachedValues[a] = amount;
+						display.updateItem(a, amount);
+					}
 				}
 			})
 		}

@@ -1,7 +1,7 @@
-define([], function(){
-    return class Woodsman {
+define(['home/buildings/cabin', 'home/citizens/citizen'], function(Cabin, Citizen){
+    return class Woodsman extends Citizen {
         constructor(level){
-            this.type = 'woodsmen';
+            super(level, 'woodsmen');
             this.costs = {
                 'food': -1,
                 'silver': -1,
@@ -15,6 +15,14 @@ define([], function(){
                 'food': 0
             };
             this.trainingTime = 2;
+            this.buildingToUse = Cabin.getTypeName();
+        }
+
+        classTurn(buildingYield) {
+            let gained = {resources: this.getBenefits()};
+            gained.defense = (this.level);
+            gained.resources.wood += (this.level * buildingYield);
+            return gained;
         }
     }
 })

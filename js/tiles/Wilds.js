@@ -50,7 +50,7 @@ define(['tiles/Square', 'events/expedition', 'ui/events/makeexpeditionuiwindow']
 					this.expedition = new Expedition(this)
 				}
 				if (this.grid.game.infoWindow.isOpen && this.grid.game.infoWindow.activeTile.UID === this.UID) {
-					this.grid.game.infoWindow.closeInfoWindow();
+					this.grid.game.infoWindow.close();
 				} else {
 					this.grid.game.infoWindow.openWith(MakeExpeditionUIWindow(this.expedition, this), this);
 				}

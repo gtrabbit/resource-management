@@ -28,12 +28,14 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			this.infoWindowLayer = new PIXI.Container();
 			this.floatLayer = new PIXI.Container();
 			this.tileLayer = new PIXI.Container();
+			this.buildingLayer = new PIXI.Container();
 			this.map = MapUI(state.width, state.height, this.squareSize, screenWidth, screenHeight);
 			this.floatLayer.name = 'floatLayer';
 			this.infoWindowLayer.name = 'infoWindowLayer';
 			this.overlays.name = 'overlays';
 			this.map.name = 'map';
 			this.tileLayer.name = 'tileLayer';
+			this.buildingLayer.name = 'buildingLayer';
 
 			//============State=================//
 			this.state = {
@@ -54,7 +56,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 			//============Logic/Function============///
 			this.eventsDisplay = SetupEventsBox(this.state.events, this.welcomeMessage);
 			this.makeTextBox = makeTextBox;
-			this.infoWindow = InfoWindow(this.basicFontStyle, this.infoWindowLayer);
+			this.infoWindow = InfoWindow(this.basicFontStyle, this.infoWindowLayer, this.animationHook);
 
 			//================ Flags ==============//
 			this.pleaseSortTiles;
@@ -85,6 +87,7 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 
 		addEvent(event){
 			this.state.events.push(event);
+			return event;
 		}
 
 		removeEvent(eventId){
@@ -94,19 +97,19 @@ define(['core/Grid', 'ui/events/eventresults', 'events/message', 'ui/map/Map', '
 
 		setStage(){
 			this.stage.addChild(this.map, this.overlays);
-			this.map.addChild(this.tileLayer, this.floatLayer, this.infoWindowLayer);
+			this.map.addChild(this.tileLayer, this.buildingLayer, this.floatLayer, this.infoWindowLayer);
 			for (let rowNumber = this.grid.rows.length-1; rowNumber >= 0; rowNumber--){
 				for (let colNum = this.grid.rows[rowNumber].length-1; colNum >= 0; colNum--){
-					this.grid.rows[rowNumber][colNum].makeUI();
-					this.tileLayer.addChildAt(this.grid.rows[rowNumber][colNum].ui.parent, 0);
+					let tileUI = this.grid.rows[rowNumber][colNum].makeUI();
+					this.tileLayer.addChildAt(tileUI, 0);
 				}
 			}
 			this.stageIsSet = true;
-			this.home.setInitialBuildings();
+			this.home.init(this.grid.homeStart, this.grid.homeStart.map(a=>a+2));
 		}
 
 		update(){
-			this.infoWindow.closeInfoWindow(); 
+			this.infoWindow.close(); 
 			this.state.turns++;
 			this.grid.home.update(this.state.turns);
 			this.grid.update(this.state.turns);

@@ -18,18 +18,24 @@ define(['core/Game', 'ui/map/baseTileUI'], function(Game, makeTileUI){
 			return this.neighbors;
 		}
 
-		makeUI(){
-			this.ui = makeTileUI(this).children[0];
-			this.setListener()
+		makeUI(){			
+			const uiContainer = makeTileUI(this);
+			this.ui = uiContainer.children[0]
+			this.setListener();
+			return uiContainer;
 		}
 
 		setListener(){
 
 		}
 
+		takeTurn() {
+			
+		}
+
 		getSpritePosition(){
 			return {
-				x: this.ui.parent.x + this.squareSize,
+				x: this.ui.parent.x,
 				y: this.ui.parent.y
 			}
 		}

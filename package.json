@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/gtrabbit/resource-management#readme",
   "dependencies": {
-    "pixi.js": "^4.7.0",
+    "pixi.js": "^4.8.1",
     "requirejs": "^2.3.5"
   }
 }

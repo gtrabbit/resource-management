@@ -13,7 +13,7 @@ define([], function(){
 				}
 			},
 
-			recieveStyle: (style, closingFunction)=>{
+			recieveStyle: function(style) {
 				const messageContainer = new PIXI.Container();			
 				const dvMsg = new PIXI.Text("Danger Rating: " + expedition.dangerValue, style);
 				messageContainer.addChild(dvMsg);
@@ -31,7 +31,7 @@ define([], function(){
 					canceler.position.set(10, 40);
 					canceler.on('click', ()=>{
 						expedition.cancelExpedition();
-						closingFunction();
+						this.close();
 					})
 		
 				} else {
@@ -98,19 +98,8 @@ define([], function(){
 					return messageContainer
 			
 			}
-
-
-
 		}
-		
-		
-		
-		
-		function recieveStyle(style){
-			
-		}
-
-		}
+	}
 	
 })
 

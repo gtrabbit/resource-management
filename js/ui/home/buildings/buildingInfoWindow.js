@@ -1,4 +1,4 @@
-define(['utils/toTitleCase'], function(toTitleCase){
+define(['utils/fromCamelCase'], function(fromCamelCase){
     return function(building){
         
         return {
@@ -6,24 +6,23 @@ define(['utils/toTitleCase'], function(toTitleCase){
                 //do something?
             },
 
-            recieveStyle: function(style, closingFunction){
+            recieveStyle: function(style) {                
                 const messageContainer = new PIXI.Container();
-                const heading = new PIXI.Text(toTitleCase(building.type) + "(Level " + building.level + ")", style);
+                const heading = new PIXI.Text(fromCamelCase(building.type, true) + "(Level " + building.level + ")", style);
                 const upgrade = new PIXI.Text("Upgrade", style);
 
                 heading.position.set(7, 15);
-                
-
-                messageContainer.addChild(heading);
+                upgrade.position.set(7, 30);
+                messageContainer.addChild(heading, upgrade);
 
                 upgrade.interactive = true;
                 upgrade.buttonMode = true;
                 upgrade.on('pointerover', highlight);
-                upgrade.on('click', purchase);
+                upgrade.on('click', purchase.bind(this));
 
                 function purchase(e){
-                    if (building.canUpgrade(building.level + 1)){
-                        closingFunction();
+                    if (building.upgrade(building.level + 1)){
+                        this.close();
                     } else {
                         console.log('not enough resources!')
                     }
